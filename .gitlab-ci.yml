@@ -1,0 +1,53 @@
+#see http://www.patricksoftwareblog.com/setting-up-gitlab-ci-for-a-python-application/
+image: "python:3.6"
+
+before_script:
+  - python --version
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+  - pip install mypy
+  - pip install flake8
+  - pip install pylint
+  - pip install pytest
+
+stages:
+  - Static Analysis
+  - Test
+
+mypy:
+  stage: Static Analysis
+  script:
+  - pwd
+  - ls -l
+  - python -m mypy v1/*.py
+  - python -m mypy *.py
+  tags:
+  - vm
+
+flake8:
+  stage: Static Analysis
+  script:
+  - flake8 --max-line-length=120 *.py
+  - flake8 --max-line-length=120 v1/*.py
+  tags:
+  - vm
+  
+pylint:
+  stage: Static Analysis
+  allow_failure: true
+  script:
+  - pylint -d C0301 *.py
+  - pylint -d C0301 v1/*.py
+  tags:
+  - vm
+
+unit_test:
+  stage: Test
+  script:
+  - pwd
+  - ls -l
+  - export PYTHONPATH="$PYTHONPATH:."
+  - python -c "import sys;print(sys.path)"
+  - pytest
+  tags:
+    - vm
