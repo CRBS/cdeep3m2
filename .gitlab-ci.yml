@@ -48,3 +48,5 @@ unit_test:
   - pytest
   tags:
     - vm
+#most pylint errors can be fixed with 
+#autopep8 --in-place --aggressive --aggressive filename.py
