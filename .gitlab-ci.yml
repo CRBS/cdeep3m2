@@ -19,7 +19,6 @@ mypy:
   script:
   - pwd
   - ls -l
-  - python -m mypy v1/*.py
   - python -m mypy *.py
   tags:
   - vm
@@ -28,7 +27,6 @@ flake8:
   stage: Static Analysis
   script:
   - flake8 --max-line-length=120 *.py
-  - flake8 --max-line-length=120 v1/*.py
   tags:
   - vm
   
@@ -37,7 +35,6 @@ pylint:
   allow_failure: true
   script:
   - pylint -d C0301 *.py
-  - pylint -d C0301 v1/*.py
   tags:
   - vm
 
