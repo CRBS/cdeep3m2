@@ -3,12 +3,12 @@ image: "python:3.6"
 
 before_script:
   - python --version
-  - pip install --upgrade pip
-  - pip install -r requirements.txt
-  - pip install mypy
-  - pip install flake8
-  - pip install pylint
-  - pip install pytest
+  - pip3 install --upgrade pip
+  - pip3 install -r requirements.txt
+  - pip3 install mypy
+  - pip3 install flake8
+  - pip3 install pylint
+  - pip3 install pytest
 
 stages:
   - Static Analysis
