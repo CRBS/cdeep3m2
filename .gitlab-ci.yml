@@ -19,6 +19,7 @@ mypy:
   script:
   - pwd
   - ls -l
+  - MYPATH=/usr/local/lib/python3.6/site-packages
   - python -m mypy *.py
   tags:
   - vm
