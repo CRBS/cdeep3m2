@@ -10,14 +10,20 @@ from keras.utils import multi_gpu_model
 #print (K.backend())
 from tensorflow.python.client import device_lib
 
+
 def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
-print ("GPU's: ",get_available_gpus())
+
+print ("GPU's: ", get_available_gpus())
 
 model = unet()
-model_checkpoint = ModelCheckpoint('unet_membrane.hdf5', monitor='loss', verbose=1, save_best_only=True)
+model_checkpoint = ModelCheckpoint(
+    'unet_membrane.hdf5',
+    monitor='loss',
+    verbose=1,
+    save_best_only=True)
 
 image_datagen = ImageDataGenerator()
 mask_datagen = ImageDataGenerator()
@@ -29,8 +35,8 @@ for file_name in os.listdir(h5_folder):
 
         #X_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'data')
         #y_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'label')
-    
-        f = h5py.File(os.path.join(h5_folder, file_name),'r')
+
+        f = h5py.File(os.path.join(h5_folder, file_name), 'r')
         X_train = f['data']
         y_train = f['label']
 
@@ -39,6 +45,9 @@ for file_name in os.listdir(h5_folder):
 
         # combine generators into one which yields image and masks
         train_generator = zip(image_generator, mask_generator)
-    
-        model.fit_generator(train_generator, steps_per_epoch=1, epochs=1, callbacks=[model_checkpoint])
 
+        model.fit_generator(
+            train_generator,
+            steps_per_epoch=1,
+            epochs=1,
+            callbacks=[model_checkpoint])

@@ -8,6 +8,7 @@ Created on Tue Jul 30 11:21:46 2019
 
 from configparser import ConfigParser
 
+
 def read_cfg(cfg_file):
     config = ConfigParser()
     config.read(cfg_file)
@@ -25,4 +26,3 @@ def read_cfg(cfg_file):
     power.append(int(scale['ElasticDistortion']))
 
     return power
-

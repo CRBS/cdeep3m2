@@ -10,9 +10,5 @@ from secondary_augmentations import run_secondary_augmentations
 from read_config import num_of_pipelines, combinations
 
 
-for i in range (0, num_of_pipelines):
-    run_secondary_augmentations(num_of_pipelines,combinations)[i].sample(5)
-    
-    
-
-    
+for i in range(0, num_of_pipelines):
+    run_secondary_augmentations(num_of_pipelines, combinations)[i].sample(5)

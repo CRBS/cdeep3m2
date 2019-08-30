@@ -6,9 +6,9 @@
 # Syntax : def_datapackages /ImageData/EMdata1/ /ImageData/AugmentedEMData/
 #
 #
-#----------------------------------------------------------------------------------------
-##PreProcessImageData for CDeep3M -- NCMIR/NBCR, UCSD -- Author: 
-#---------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
+# PreProcessImageData for CDeep3M -- NCMIR/NBCR, UCSD -- Author:
+# ---------------------------------------------------------------------------------------
 #
 
 import sys
@@ -17,13 +17,15 @@ from check_image_size import check_image_size
 from break_large_img import break_large_img
 import json
 
+
 def main():
     arg_list = []
     for arg in sys.argv:
         arg_list.append(arg)
 
     if len(arg_list) < 2:
-        print ('Use -> PreProcessImageData /ImageData/EMdata1/ /ImageData/AugmentedEMData/')
+        print (
+            'Use -> PreProcessImageData /ImageData/EMdata1/ /ImageData/AugmentedEMData/')
         return
 
     in_img_path = arg_list[1]
@@ -49,7 +51,7 @@ def main():
         document.write('\nNumber of XY Packages\n')
         document.write(str(num_of_pkg))
         document.write('\nNumber of z-blocks\n')
-        document.write(str(len(z_blocks)-1))
+        document.write(str(len(z_blocks) - 1))
 
 
 if __name__ == "__main__":

@@ -1,19 +1,19 @@
 # PreprocessValidation
-# Makes hdf5 validation file from raw images and corresponding labels 
+# Makes hdf5 validation file from raw images and corresponding labels
 #
 # Syntax : PreprocessValidation ~/validation/images/ ~/validation/labels/ ~/validation/combined
 #
 #
-#----------------------------------------------------------------------------------------
-## PreprocessTraining for Deep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 04/2018
-#----------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
+# PreprocessTraining for Deep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 04/2018
+# ----------------------------------------------------------------------------------------
 #
 # Runtime: <1 min
 #
 
 
 # ----------------------------------------------------------------------------------------
-## Initialize
+# Initialize
 # ----------------------------------------------------------------------------------------
 import os
 import sys
@@ -36,14 +36,14 @@ if len(arg_list) < 3:
 tic = time.time()
 
 trainig_img_path = arg_list[0]
-print('Validation Image Path:', trainig_img_path) 
+print('Validation Image Path:', trainig_img_path)
 label_img_path = arg_list[1]
 print('Validation Label Path:', label_img_path)
 outdir = arg_list[2]
 print('Output Path:', outdir)
 
 # ----------------------------------------------------------------------------------------
-## Load images
+# Load images
 # ----------------------------------------------------------------------------------------
 
 print('Loading:')
@@ -53,7 +53,7 @@ print('Verifying images')
 checkpoint_nobinary(imgstack)
 
 # ----------------------------------------------------------------------------------------
-## Load labels
+# Load labels
 # ----------------------------------------------------------------------------------------
 
 print('Loading:')
@@ -69,8 +69,10 @@ checkpoint_isbinary(lblstack)
 img = imgstack.astype('float32')
 lb = lblstack.astype('float32')
 
-img = np.array([img[n, i*256:(i+1)*256, j*256:(j+1)*256, :] for j in range(4) for i in range(4) for n in range(img.shape[0])])
-lb = np.array([lb[n, i*256:(i+1)*256, j*256:(j+1)*256, :] for j in range(4) for i in range(4) for n in range(lb.shape[0])])
+img = np.array([img[n, i * 256:(i + 1) * 256, j * 256:(j + 1) * 256, :]
+                for j in range(4) for i in range(4) for n in range(img.shape[0])])
+lb = np.array([lb[n, i * 256:(i + 1) * 256, j * 256:(j + 1) * 256, :]
+               for j in range(4) for i in range(4) for n in range(lb.shape[0])])
 
 d_details = '/data'
 l_details = '/label'
@@ -80,7 +82,8 @@ if not os.path.isdir(outdir):
 
 ext = ".h5"
 
-filename = os.path.abspath(outdir)+'/'+'validation_stack_v{0}{1}'.format(str(1), ext)
+filename = os.path.abspath(outdir) + '/' + \
+    'validation_stack_v{0}{1}'.format(str(1), ext)
 print ('Saving: ', filename)
 hdf5_file = h5py.File(filename, mode='w')
 hdf5_file.create_dataset(d_details, data=img)
@@ -88,8 +91,8 @@ hdf5_file.create_dataset(l_details, data=lb)
 hdf5_file.close()
 
 # ----------------------------------------------------------------------------------------
-## Completed
+# Completed
 # ----------------------------------------------------------------------------------------
 
-print('Validation data stored in %06d seconds.\n'% (np.round(time.time()-tic)))
-
+print('Validation data stored in %06d seconds.\n' %
+      (np.round(time.time() - tic)))

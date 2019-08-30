@@ -1,11 +1,11 @@
 
-#check_image_size: to see how to break large image data
+# check_image_size: to see how to break large image data
 #
-# 
-# 
-#----------------------------------------------------------------------------
-## CDeep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 02/2019
-#-----------------------------------------------------------------------------
+#
+#
+# ----------------------------------------------------------------------------
+# CDeep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 02/2019
+# -----------------------------------------------------------------------------
 
 import os
 import h5py
@@ -14,18 +14,19 @@ import numpy as np
 import skimage
 from read_files_in_folder import read_files_in_folder
 
-Image.MAX_IMAGE_PIXELS=10000000000000
+Image.MAX_IMAGE_PIXELS = 10000000000000
+
 
 def check_image_size(img_path):
     print ('Check image size of: ', img_path)
-    #check if a folder of png/tif files or a single stack to load
+    # check if a folder of png/tif files or a single stack to load
     if os.path.isfile(img_path) == 1:
         filename, file_extension = os.path.splitext(img_path)
         if file_extension == '.h5':
             print ('Reading H5 image file')
             data = h5py.File(img_path, 'r')
             keys = list(data.keys())
-            imagesize =  data[keys[0]].shape
+            imagesize = data[keys[0]].shape
             return imagesize
 
         elif file_extension == '.tif':
@@ -49,7 +50,7 @@ def check_image_size(img_path):
             print ('No Tifs or PNGs found in the directory')
             return
         else:
-            #only read tif or pngs if ambiguous
+            # only read tif or pngs if ambiguous
             if len(png_list) > len(tif_list):
                 file_list = png_list
             else:
@@ -62,9 +63,4 @@ def check_image_size(img_path):
             return imagesize
 
     else:
-        raise Exception ('No images found')
-
-
-
-
-
+        raise Exception('No images found')

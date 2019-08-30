@@ -12,8 +12,8 @@ for filename in os.listdir(image_dir):
     print(filename)
     if filename.endswith(".png"):
         print(filename)
-        im = Image.open(os.path.join(image_dir,filename))
+        im = Image.open(os.path.join(image_dir, filename))
         im = np.array(im)
-        fname = filename+'_4096.png'
+        fname = filename + '_4096.png'
         cv2.imwrite(os.path.join(outdir, fname), im[0:4096, 0:4096])
         #skimage.io.imsave(os.path.join(outdir, fname), skimage.img_as_ubyte(im), as_grey=True)

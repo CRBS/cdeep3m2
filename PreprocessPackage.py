@@ -10,9 +10,9 @@
 # speeds up processing potentially with a negative effect on accuracy (speed of 1 equals highest accuracy)
 #
 #
-#----------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 # preprocess_package for Deep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 02/2019
-#----------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------
 # Initialize
@@ -37,7 +37,7 @@ def main():
     fmtype = sys.argv[5]
     fmnumber = int(fmtype[0])
     speed = int(sys.argv[6])
-    fmdir = os.path.join(outdir, str(fmnumber)+'fm')
+    fmdir = os.path.join(outdir, str(fmnumber) + 'fm')
     if os.path.isdir(fmdir) == 0:
         os.mkdir(fmdir)
 
@@ -53,11 +53,15 @@ def main():
     #print("zz "+str(zz))
     #print("z_blocks", z_blocks)
     #print("packages", packages)
-    z_stack = [z_blocks[zz-1], z_blocks[zz]]
+    z_stack = [z_blocks[zz - 1], z_blocks[zz]]
 
-    area = packages[ii-1]
+    area = packages[ii - 1]
 
-    stack = imageimporter_large(in_img_path, area, z_stack, outdir)  # load only subarea here
+    stack = imageimporter_large(
+        in_img_path,
+        area,
+        z_stack,
+        outdir)  # load only subarea here
     checkpoint_nobinary(stack)
     print ('Padding images\n')
     stack = add_z_padding(stack)  # adds 2 planes in the beginning and end

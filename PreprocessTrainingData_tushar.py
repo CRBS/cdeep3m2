@@ -26,9 +26,9 @@ def main():
     outdir = arg_list[2]
     print ('Output Path:', outdir)
 
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
     # Load training images
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
 
     print ('Loading:')
     print (trainig_img_path)
@@ -36,9 +36,9 @@ def main():
     print ('Verifying images')
     checkpoint_nobinary(imgstack)
 
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
     # Load train data
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
 
     print ('Loading:')
     print (label_img_path)
@@ -46,15 +46,15 @@ def main():
     print ('Verifying labels')
     checkpoint_isbinary(lblstack)
 
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
     # Check size of images and labels
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
 
     [imgstack, lblstack] = check_img_dims(imgstack, lblstack, 325)
 
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
     # Augment the data, generating 16 versions and save
-    #----------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------
 
     img_v1 = imgstack.astype('float32')
     lb_v1 = lblstack.astype('float32')
@@ -74,7 +74,7 @@ def main():
         #shape = img.shape
         #temp_img = np.zeros([shape[1], shape[2], shape[0]], dtype=img.dtype)
         #temp_lb = np.zeros([shape[1], shape[2], shape[0]], dtype=lb.dtype)
-        #for z in range(0, shape[0]):
+        # for z in range(0, shape[0]):
         #    temp_img[:, :, z] = img[z].T
         #    temp_lb[:, :, z] = lb[z].T
         #img = temp_img
@@ -84,11 +84,13 @@ def main():
         inv_img = np.flip(img, 0)
         inv_lb = np.flip(lb, 0)
         filename = os.path.abspath(
-            outdir)+'/'+'training_full_stacks_v{0}{1}'.format(str(i+1), ext)
+            outdir) + '/' + 'training_full_stacks_v{0}{1}'.format(str(i + 1), ext)
         print ('Saving: ', filename)
-        
-        img = np.array([img[n, i*256:(i+1)*256, j*256:(j+1)*256, :] for j in range(4) for i in range(4) for n in range(img.shape[0])])
-        lb = np.array([lb[n, i*256:(i+1)*256, j*256:(j+1)*256, :] for j in range(4) for i in range(4) for n in range(lb.shape[0])])
+
+        img = np.array([img[n, i * 256:(i + 1) * 256, j * 256:(j + 1) * 256, :]
+                        for j in range(4) for i in range(4) for n in range(img.shape[0])])
+        lb = np.array([lb[n, i * 256:(i + 1) * 256, j * 256:(j + 1) * 256, :]
+                       for j in range(4) for i in range(4) for n in range(lb.shape[0])])
         print (img.shape)
         print (lb.shape)
 
@@ -98,11 +100,13 @@ def main():
         hdf5_file.close()
 
         filename = os.path.abspath(
-            outdir)+'/'+'training_full_stacks_v{0}{1}'.format(str(i+1+8), ext)
+            outdir) + '/' + 'training_full_stacks_v{0}{1}'.format(str(i + 1 + 8), ext)
         print ('Saving: ', filename)
-        
-        inv_img = np.array([inv_img[n, i*256:(i+1)*256, j*256:(j+1)*256, :] for j in range(4) for i in range(4) for n in range(inv_img.shape[0])])
-        inv_lb = np.array([inv_lb[n, i*256:(i+1)*256, j*256:(j+1)*256, :] for j in range(4) for i in range(4) for n in range(inv_lb.shape[0])])
+
+        inv_img = np.array([inv_img[n, i * 256:(i + 1) * 256, j * 256:(j + 1) * 256, :]
+                            for j in range(4) for i in range(4) for n in range(inv_img.shape[0])])
+        inv_lb = np.array([inv_lb[n, i * 256:(i + 1) * 256, j * 256:(j + 1) * 256, :]
+                           for j in range(4) for i in range(4) for n in range(inv_lb.shape[0])])
         print (inv_img.shape)
         print (inv_lb.shape)
         hdf5_file = h5py.File(filename, mode='w')
@@ -115,6 +119,6 @@ def main():
         print ('For training your model please run runtraining.sh ',
                outdir, '<desired output directory>\n')
 
+
 if __name__ == "__main__":
     main()
-             
