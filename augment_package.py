@@ -1,5 +1,4 @@
 
-
 # ------------------------------------------------
 # augment_package for CDeep3M -- NCMIR/NBCR, UCSD
 # ------------------------------------------------
@@ -50,12 +49,12 @@ def augment_package(original, outsubdir, fmnumber, speed):
         else:
             stack_out = augment_img(original_flip, i - 9)
 
-        print ('Create Hd5 file Variation ', str(i))
+        print('Create Hd5 file Variation ', str(i))
 
         stack_out = stack_out.transpose([1, 2, 0])
 
         filename = os.path.join(outsubdir, 'image_stacks_v%d.h5' % (i))
-        print ('Saving: ', filename)
+        print('Saving: ', filename)
         hdf5_file = h5py.File(filename, mode='w')
         hdf5_file.create_dataset(d_details, data=stack_out)
         hdf5_file.close()
