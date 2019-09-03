@@ -9,7 +9,8 @@
 # <outdir>/<model>/trainedmodel
 ##
 # The <model>_model/<model>_classifierpath is returned
-## via <train_model_dest> variable
+# via <train_model_dest> variable
+##
 import os
 
 
