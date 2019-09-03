@@ -15,7 +15,7 @@ def conv2d_bn(
             1,
             1),
         activation='relu',
-            name=None):
+        name=None):
     '''
     2D Convolutional layers
 
