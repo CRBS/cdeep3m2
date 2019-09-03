@@ -1,4 +1,3 @@
-
 # imageimporter_large: loads subarea of large image data
 # from folder or from an individual image stack
 #
@@ -16,8 +15,8 @@ from crop_png import crop_png
 
 
 def imageimporter_large(img_path, area, z_stack, outfolder):
-    print ('Image importer loading ... ')
-    print (img_path)
+    print('Image importer loading ... ')
+    print(img_path)
 
     # check if a folder of png/tif files or a single stack to load
     name_with_path, ext = os.path.splitext(img_path)
@@ -78,8 +77,8 @@ def imageimporter_large(img_path, area, z_stack, outfolder):
             print('Reading images')
             imgstack = np.array([skimage.io.imread(os.path.join(
                 tempdir, file_list[i][:-3] + 'png'), as_gray=True) for i in range(z_stack[0], z_stack[1])])
-            #shape = np.shape(imgstack)
-            #print (shape)
+            # shape = np.shape(imgstack)
+            # print (shape)
 
     else:
         raise Exception('No images found')
