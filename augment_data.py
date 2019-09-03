@@ -25,7 +25,7 @@ from SecondaryOperations import (
 
 
 def augment_img(img_in, i=0):
-    print ('\nCreate variation {0} and {1}'.format(str(i), str(i + 8)))
+    print('\nCreate variation {0} and {1}'.format(str(i), str(i + 8)))
     augment_choices = {
         0: (img_in),
         1: (np.flip(img_in, 1)),
@@ -59,7 +59,7 @@ def augment_data(img_in, lbl_in, i=0):
 
 # build pipelines for secondary augmentations
 def addtl_augs(strength, img_in, lbl_in, i=0):
-    print ('\nCreate additional variation {0}'.format(str(i + 1)))
+    print('\nCreate additional variation {0}'.format(str(i + 1)))
     addtl_choices = {
         0: img_in,
         1: HighContrast,
@@ -104,7 +104,7 @@ def addtl_augs(strength, img_in, lbl_in, i=0):
 
 # build pipelines for resizing
 def third_augs(strength, img_in, lbl_in, i):
-    print ('\nApplying tertiary augmentation to stack {0}'.format(str(i + 1)))
+    print('\nApplying tertiary augmentation to stack {0}'.format(str(i + 1)))
     if strength == '0':
         img_out, lbl_out = img_in, lbl_in
     else:
@@ -113,7 +113,7 @@ def third_augs(strength, img_in, lbl_in, i):
         # downscale stacks 1, 3, 5, 7
         elif i < 8:
             img_out, lbl_out = Resize(img_in, lbl_in, strength, 0)
-       # upscale stacks 9, 11, 13, 15
+        # upscale stacks 9, 11, 13, 15
         else:
             img_out, lbl_out = Resize(img_in, lbl_in, strength, 1)
 
