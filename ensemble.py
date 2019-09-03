@@ -80,10 +80,10 @@ def ensemble(sys_argv):
             print(time() - t0)
             print(temp.shape)
         arr = np.array(np.mean(temp, axis=(2)), dtype=np.uint8)
-        #aver = Image.fromarray(arr)
-        #cv2.imwrite(os.path.join(outfolder,filelist1[x]), arr)
+        # aver = Image.fromarray(arr)
+        # cv2.imwrite(os.path.join(outfolder,filelist1[x]), arr)
         print("ensemble size", arr.shape)
-        #saveimage.imsave(os.path.join(outfolder,filelist1[x]), arr, cmap='gray')
+        # saveimage.imsave(os.path.join(outfolder,filelist1[x]), arr, cmap='gray')
         try:
             skimage.io.imsave(
                 os.path.join(
@@ -95,7 +95,7 @@ def ensemble(sys_argv):
             skimage.io.imsave(os.path.join(outfolder, filelist1[x]), arr)
         return
 
-    #p_tasks = 2
+    # p_tasks = 2
     p_tasks = max(1, min(6, int(cpu_count() / 2.5)))
     sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
     Parallel(n_jobs=p_tasks)(delayed(average_img)(i)
