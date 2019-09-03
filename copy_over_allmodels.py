@@ -1,4 +1,4 @@
-## Usage [onefm_dest, threefm_dest, fivefm_dest] = copy_over_allmodels( base_dir, outdir )
+#  Usage [onefm_dest, threefm_dest, fivefm_dest] = copy_over_allmodels( base_dir, outdir )
 ##
 # Create outdir directory and copy over model files for
 # 1fm, 3fm, and 5fm models. It is assumed that
