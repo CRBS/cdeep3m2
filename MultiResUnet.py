@@ -14,8 +14,8 @@ def conv2d_bn(
         strides=(
             1,
             1),
-    activation='relu',
-        name=None):
+        activation='relu',
+            name=None):
     '''
     2D Convolutional layers
 
