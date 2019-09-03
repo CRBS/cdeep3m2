@@ -13,8 +13,8 @@
 import os
 import sys
 import time
-from ensemble import ensemble
 import numpy as np
+from ensemble import ensemble
 from read_files_in_folder import read_files_in_folder
 
 tic = time.time()
