@@ -1,4 +1,3 @@
-
 # check_image_size: to see how to break large image data
 #
 #
@@ -18,12 +17,12 @@ Image.MAX_IMAGE_PIXELS = 10000000000000
 
 
 def check_image_size(img_path):
-    print ('Check image size of: ', img_path)
+    print('Check image size of: ', img_path)
     # check if a folder of png/tif files or a single stack to load
     if os.path.isfile(img_path) == 1:
         filename, file_extension = os.path.splitext(img_path)
         if file_extension == '.h5':
-            print ('Reading H5 image file')
+            print('Reading H5 image file')
             data = h5py.File(img_path, 'r')
             keys = list(data.keys())
             imagesize = data[keys[0]].shape
@@ -47,7 +46,7 @@ def check_image_size(img_path):
         png_list = [f for f in file_list if f.endswith('.png')]
         tif_list = [f for f in file_list if f.endswith('.tif')]
         if len(tif_list) + len(png_list) == 0:
-            print ('No Tifs or PNGs found in the directory')
+            print('No Tifs or PNGs found in the directory')
             return
         else:
             # only read tif or pngs if ambiguous
@@ -57,7 +56,7 @@ def check_image_size(img_path):
                 file_list = tif_list
 
             filename = os.path.join(img_path, file_list[0])
-            print ('Reading file: ', filename)
+            print('Reading file: ', filename)
             imarray = skimage.io.imread(filename)
             imagesize = (imarray.shape[0], imarray.shape[1], len(file_list))
             return imagesize
