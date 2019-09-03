@@ -6,8 +6,8 @@ from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
 from Unet import unet
 from keras.utils import multi_gpu_model
-#from keras import backend as K
-#print (K.backend())
+# from keras import backend as K
+# print (K.backend())
 from tensorflow.python.client import device_lib
 
 
@@ -16,7 +16,7 @@ def get_available_gpus():
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
 
-print ("GPU's: ", get_available_gpus())
+print("GPU's: ", get_available_gpus())
 
 model = unet()
 model_checkpoint = ModelCheckpoint(
@@ -28,13 +28,13 @@ model_checkpoint = ModelCheckpoint(
 image_datagen = ImageDataGenerator()
 mask_datagen = ImageDataGenerator()
 
-#h5_folder = '/scratch/converted_all_python/test_testsample_processed'
+# h5_folder = '/scratch/converted_all_python/test_testsample_processed'
 h5_folder = '/scratch/converted_all_python/test_testsample_processed/converted/'
 for file_name in os.listdir(h5_folder):
     if file_name.endswith('h5'):
 
-        #X_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'data')
-        #y_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'label')
+        # X_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'data')
+        # y_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'label')
 
         f = h5py.File(os.path.join(h5_folder, file_name), 'r')
         X_train = f['data']
