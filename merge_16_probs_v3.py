@@ -1,8 +1,8 @@
 import os
 # import sys
+import shutil
 import h5py
 import numpy as np
-import shutil
 import skimage
 from read_files_in_folder import read_files_in_folder
 
@@ -15,9 +15,9 @@ def merge_16_probs_v3(folder):
             os.path.join(
                 folder,
                 '')) if os.path.isdir(
-            os.path.join(
-                folder,
-                dir_name)) and dir_name.startswith('v')]
+                    os.path.join(
+                        folder,
+                        dir_name)) and dir_name.startswith('v')]
 
     folder_name = os.path.join(folder, vfolderlist[0])
     # print(folder_name)
