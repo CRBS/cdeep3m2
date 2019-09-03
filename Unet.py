@@ -1,5 +1,3 @@
-import numpy as np
-import os
 import skimage.io as io
 import skimage.transform as trans
 import numpy as np
@@ -46,10 +44,10 @@ def unet(pretrained_weights=None, input_size=(256, 256, 1)):
         activation='relu',
         padding='same',
         kernel_initializer='he_normal')(
-        UpSampling2D(
-            size=(
-                2,
-                2))(drop5))
+            UpSampling2D(
+                size=(
+                    2,
+                    2))(drop5))
     merge6 = concatenate([drop4, up6], axis=3)
     conv6 = Conv2D(512, 3, activation='relu', padding='same',
                    kernel_initializer='he_normal')(merge6)
