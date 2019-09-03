@@ -16,6 +16,7 @@ import json
 from check_image_size import check_image_size
 from break_large_img import break_large_img
 
+
 def main():
     arg_list = []
     for arg in sys.argv:
