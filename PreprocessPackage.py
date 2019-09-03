@@ -49,10 +49,10 @@ def main():
     imagesize = json_file_contents['imagesize']
     z_blocks = json_file_contents['z_blocks']
 
-    #print("ii "+str(ii))
-    #print("zz "+str(zz))
-    #print("z_blocks", z_blocks)
-    #print("packages", packages)
+    # print("ii "+str(ii))
+    # print("zz "+str(zz))
+    # print("z_blocks", z_blocks)
+    # print("packages", packages)
     z_stack = [z_blocks[zz - 1], z_blocks[zz]]
 
     area = packages[ii - 1]
@@ -63,7 +63,7 @@ def main():
         z_stack,
         outdir)  # load only subarea here
     checkpoint_nobinary(stack)
-    print ('Padding images\n')
+    print('Padding images\n')
     stack = add_z_padding(stack)  # adds 2 planes in the beginning and end
 
     # augment_and_saveSave image data
