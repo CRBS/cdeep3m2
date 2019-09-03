@@ -50,7 +50,7 @@ with open(de_aug_file, 'r') as json_file:
 packages = json_file_contents['packages']
 num_of_pkg = json_file_contents['num_of_pkg']
 imagesize = json_file_contents['imagesize']
-#zplanes = json_file_contents['zplanes']
+# zplanes = json_file_contents['zplanes']
 z_blocks = json_file_contents['z_blocks']
 
 # Merge Z-sections
@@ -97,9 +97,9 @@ for z_plane in range(0, z_found):  # one z-plane at a time
 
         # bitdepth = single(2.^([1:16]));
         # [~,idx] = min(abs(bitdepth - max(small_patch(:))));
-        #fprintf('Scaling %s bit image\n', num2str(idx));
-        #save_plane = uint8((255 /bitdepth(idx))*combined_plane);
-        #small_patch = single((255 /bitdepth(idx))*small_patch);
+        # fprintf('Scaling %s bit image\n', num2str(idx));
+        # save_plane = uint8((255 /bitdepth(idx))*combined_plane);
+        # small_patch = single((255 /bitdepth(idx))*small_patch);
         # small_patch = single((255 /max(small_patch(:)))*small_patch);
         area = packages[x_y_num]
         if len(packages) > 1:
@@ -143,11 +143,11 @@ for z_plane in range(0, z_found):  # one z-plane at a time
                 imagesize[0] + start[0]), start[1]:(imagesize[1] + start[1])]
 
     bitdepth = [2**i for i in range(1, 17)]
-    #print('Scaling %s bit image\n' %(num2str(idx)))
+    # print('Scaling %s bit image\n' %(num2str(idx)))
     idx = abs(np.array(bitdepth) - max(merger_image.flatten())).argmin()
     save_plane = np.uint8(np.round((255.0 / bitdepth[idx]) * merger_image))
     outfile = os.path.join(fm_dir, 'Segmented_%04d.png' % (z_plane + 1))
-    #print('Saving image %s\n' %(outfile))
+    # print('Saving image %s\n' %(outfile))
     try:
         skimage.io.imsave(outfile, save_plane, as_grey=True)
     except BaseException:
