@@ -1,5 +1,6 @@
 h5py
 joblib
+keras
 requests
 Cython
 numpy>=1.16.5 
