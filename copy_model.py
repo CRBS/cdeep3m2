@@ -17,11 +17,11 @@ def copy_model(base_dir, the_model, dest_dir):
         'inception_residual_train_prediction_' +
         the_model,
         '*txt')
-    #print (src_files)
+    # print (src_files)
     for filename in glob.glob(src_files):
         try:
             shutil.copy(filename, dest_dir)
         except Exception as e:
-            print ('Error copying model ', the_model, '\n', str(e))
+            print('Error copying model ', the_model, '\n', str(e))
 
     return
