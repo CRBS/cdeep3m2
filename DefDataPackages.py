@@ -1,4 +1,3 @@
-
 # -> Defines size of datapackages used for augmentation of image data
 # Input: Image folder and output directory to store de_augmentation file
 # Output: de_augmentation_info.mat
@@ -13,10 +12,9 @@
 
 import sys
 import os
+import json
 from check_image_size import check_image_size
 from break_large_img import break_large_img
-import json
-
 
 def main():
     arg_list = []
@@ -24,7 +22,7 @@ def main():
         arg_list.append(arg)
 
     if len(arg_list) < 2:
-        print (
+        print(
             'Use -> PreProcessImageData /ImageData/EMdata1/ /ImageData/AugmentedEMData/')
         return
 
@@ -55,5 +53,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print ('Starting Image Augmentation:')
+    print('Starting Image Augmentation:')
     main()
