@@ -16,7 +16,7 @@ imageimporter: loads image data from folder or from an individual image stack
     print('Image importer loading ... ')
     print(img_path)
     # check if a folder of png/tif files or a single stack to load
-    #[Dir,name,ext] = fileparts(img_path);
+    # [Dir,name,ext] = fileparts(img_path);
     name_with_path, ext = os.path.splitext(img_path)
     imgstack = []
     if ext:
@@ -60,11 +60,11 @@ imageimporter: loads image data from folder or from an individual image stack
                      ),
                     axis=-
                     1) for filename in file_list]
-            #imgstack = np.array([pilimage.open(os.path.join(img_path,file_list[i])) for i in range(0, len(file_list))])
+            # imgstack = np.array([pilimage.open(os.path.join(img_path,file_list[i])) for i in range(0, len(file_list))])
             shape = np.shape(imgstack)
             print (shape)
     else:
         raise Exception('No images found')
         return
-    print (np.array(imgstack).shape)
+    print(np.array(imgstack).shape)
     return np.array(imgstack)
