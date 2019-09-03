@@ -28,7 +28,7 @@ from add_z_padding import add_z_padding
 
 
 def main():
-    print ('Starting Image Augmentation')
+    print('Starting Image Augmentation')
 
     in_img_path = sys.argv[1]
     outdir = sys.argv[2]
