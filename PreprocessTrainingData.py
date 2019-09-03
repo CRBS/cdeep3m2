@@ -28,7 +28,9 @@ def main():
         arg_list.append(arg)
 
     if len(arg_list) < 3:
-        print('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ Secondary augmentation strength(int value or path to config file, no input for default 0) Tertiary augmentation strength /ImageData/augmentedtraining/')
+        print('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ ')
+        print('Secondary augmentation strength(int value or path to config file, no input for default 0)')
+        print('Tertiary augmentation strength /ImageData/augmentedtraining/')
         return
 
 # counting number of training sets provided
@@ -174,7 +176,7 @@ def main():
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)
     print('For training your model please run runtraining.sh ',
-           outdir, '<desired output directory>\n')
+          outdir, '<desired output directory>\n')
 
 
 if __name__ == "__main__":
