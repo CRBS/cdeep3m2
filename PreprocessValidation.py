@@ -29,7 +29,7 @@ print('Starting Validation data Preprocessing')
 arg_list = sys.argv[1:]
 
 if len(arg_list) < 3:
-    print ('Use -> python PreprocessValidation.py /validation/images/ /validation/labels/ /validdation/combined')
+    print('Use -> python PreprocessValidation.py /validation/images/ /validation/labels/ /validdation/combined')
     exit()
 
 tic = time.time()
@@ -62,7 +62,7 @@ print('Verifying labels')
 checkpoint_isbinary(lblstack)
 
 # ----------------------------------------------------------------------------------------
-## Convert and save
+# Convert and save
 # ----------------------------------------------------------------------------------------
 
 img = imgstack.astype('float32')
@@ -78,7 +78,7 @@ ext = ".h5"
 
 filename = os.path.abspath(outdir) + '/' + \
     'validation_stack_v{0}{1}'.format(str(1), ext)
-print ('Saving: ', filename)
+print('Saving: ', filename)
 hdf5_file = h5py.File(filename, mode='w')
 hdf5_file.create_dataset(d_details, data=img)
 hdf5_file.create_dataset(l_details, data=lb)
