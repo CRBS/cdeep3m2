@@ -2,7 +2,7 @@ import numpy as np
 import os
 import h5py
 
-#h5_folder = '/scratch/converted_all_python/test_testsample_processed'
+# h5_folder = '/scratch/converted_all_python/test_testsample_processed'
 h5_folder = '/scratch/test_training/prashant_augmentedtraining'
 if not os.path.isdir(os.path.join(h5_folder, 'converted')):
     os.mkdir(os.path.join(h5_folder, 'converted'))
