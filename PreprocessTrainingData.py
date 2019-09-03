@@ -22,13 +22,13 @@ import numpy as np
 
 
 def main():
-    print ('Starting Training Data Preprocessing')
+    print('Starting Training Data Preprocessing')
     arg_list = []
     for arg in sys.argv[1:]:
         arg_list.append(arg)
 
     if len(arg_list) < 3:
-        print ('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ Secondary augmentation strength (int value or path to config file, no input for default 0) Tertiary augmentation strength /ImageData/augmentedtraining/')
+        print('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ Secondary augmentation strength(int value or path to config file, no input for default 0) Tertiary augmentation strength /ImageData/augmentedtraining/')
         return
 
 # counting number of training sets provided
@@ -56,44 +56,44 @@ def main():
             i += 2
 
     num_training_sets = len(augmentation_level)
-    print ('num_training_sets:', num_training_sets)
-    print ('augmentation_level:', augmentation_level)
-    print ('thrid_augmentation_level:', third_aug_lvl)
-    #print ('ends:', ends)
+    print('num_training_sets:', num_training_sets)
+    print('augmentation_level:', augmentation_level)
+    print('thrid_augmentation_level:', third_aug_lvl)
+    # print('ends:', ends)
 
     for j in range(num_training_sets):
 
         training_img_path = arg_list[ends[j] - 1]
-        print ('Training Image Path:', training_img_path)
+        print('Training Image Path:', training_img_path)
         label_img_path = arg_list[ends[j]]
-        print ('Training Label Path:', label_img_path)
+        print('Training Label Path:', label_img_path)
 
         strength = augmentation_level[j]
-        print ('Secondary Augmentation level:', strength)
+        print('Secondary Augmentation level:', strength)
         third_str = third_aug_lvl[j]
-        print ('Tertiary Augmentation level:', third_str)
+        print('Tertiary Augmentation level:', third_str)
 
         outdir = arg_list[len(arg_list) - 1]
-        print ('Output Path:', outdir)
+        print('Output Path:', outdir)
 
         # ----------------------------------------------------------------------------------------
         # Load training images
         # ----------------------------------------------------------------------------------------
 
-        print ('Loading:')
-        print (training_img_path)
+        print('Loading:')
+        print(training_img_path)
         imgstack = imageimporter(training_img_path)
-        print ('Verifying images')
+        print('Verifying images')
         checkpoint_nobinary(imgstack)
 
         # ----------------------------------------------------------------------------------------
         # Load train labels
         # ----------------------------------------------------------------------------------------
 
-        print ('Loading:')
-        print (label_img_path)
+        print('Loading:')
+        print(label_img_path)
         lblstack = imageimporter(label_img_path)
-        print ('Verifying labels')
+        print('Verifying labels')
         checkpoint_isbinary(lblstack)
         if np.max(lblstack[:]) != 1:
             lblstack = np.divide(lblstack, np.max(lblstack[:]))
@@ -120,7 +120,7 @@ def main():
 
         ext = ".h5"
 
-        print ('Augmenting training data 1-8 and 9-16')
+        print('Augmenting training data 1-8 and 9-16')
         for i in range(8):
             # v1-8
 
@@ -141,7 +141,7 @@ def main():
 
             filename = os.path.abspath(
                 outdir) + '/' + 'training_full_stacks_v{0}_{1}.h5'.format(str(j + 1), str(i + 1), ext)
-            print ('Saving: ', filename)
+            print('Saving: ', filename)
             hdf5_file = h5py.File(filename, mode='w')
             img_result_f, lb_result_f = dim_convert(img_result_f, lb_result_f)
             hdf5_file.create_dataset(d_details, data=img_result_f)
@@ -161,7 +161,7 @@ def main():
 
             filename = os.path.abspath(
                 outdir) + '/' + 'training_full_stacks_v{0}_{1}.h5'.format(str(j + 1), str(i + 1 + 8), ext)
-            print ('Saving: ', filename)
+            print('Saving: ', filename)
             hdf5_file = h5py.File(filename, mode='w')
             inv_img_result_f, inv_lb_result_f = dim_convert(
                 inv_img_result_f, inv_lb_result_f)
@@ -171,9 +171,9 @@ def main():
             del inv_img_result, inv_img_result_r, inv_img_result_f
             del inv_lb_result, inv_lb_result_r, inv_lb_result_f
 
-    print ('\n-> Training data augmentation completed')
-    print ('Training data stored in ', outdir)
-    print ('For training your model please run runtraining.sh ',
+    print('\n-> Training data augmentation completed')
+    print('Training data stored in ', outdir)
+    print('For training your model please run runtraining.sh ',
            outdir, '<desired output directory>\n')
 
 
