@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def check_img_dims(imgstack, lblstack, minsize):
     """
  Check Canvas Size of training images and training labels
