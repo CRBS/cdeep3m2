@@ -16,8 +16,8 @@ def conv3d_bn(
             1,
             1,
             1),
-    activation='relu',
-        name=None):
+        activation='relu',
+            name=None):
     '''
     3D Convolutional layers
 
