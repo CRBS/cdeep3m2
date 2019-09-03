@@ -1,5 +1,5 @@
 import os
-import sys
+# import sys
 import h5py
 import numpy as np
 import shutil
@@ -72,7 +72,7 @@ def merge_16_probs_v3(folder):
 
             if os.path.isdir(folder_name):
                 filename = os.path.join(folder_name, loadfile_revert)
-                #load_im = h5read(filename, '/data');
+                # load_im = h5read(filename, '/data');
                 load_im = h5py.File(filename, mode='r')
                 load_im = list(load_im['/data'])
                 # scale = max(max(load_im(:,:,2)));
@@ -116,7 +116,7 @@ def merge_16_probs_v3(folder):
             skimage.io.imsave(output_filename, skimage.img_as_ubyte(image))
         # tiff_file_save=[folder filesep 'ave_16.tiff'];
 
-        # tried different weighting of 16v predictions, using mode instead of average -> 
+        # tried different weighting of 16v predictions, using mode instead of average ->
         # need to test if better but currently slow
         # {
         # image2 = mode(sixteen_vars,3)
