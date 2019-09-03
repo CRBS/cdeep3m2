@@ -1,4 +1,4 @@
-## Usage [errmsg] = copy_version( base_dir, dest_dir )
+# Usage [errmsg] = copy_version( base_dir, dest_dir )
 ##
 # Starting from base_dir directory this function
 # copies the VERSION from to directory specified
@@ -17,6 +17,6 @@ def copy_version(base_dir, dest_dir):
         shutil.copy(src_file, dest_dir)
     except Exception as e:
         errmsg = 'Error copying VERSION ' + src_file + '\n' + str(e)
-        print (errmsg)
+        print(errmsg)
 
     # return errmsg
