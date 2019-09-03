@@ -7,6 +7,7 @@
 # CDeep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 11/2017
 # -----------------------------------------------------------------------------
 import os
+import h5py
 import skimage
 import numpy as np
 from PIL import Image as pilimage
