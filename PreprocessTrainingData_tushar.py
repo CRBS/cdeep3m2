@@ -16,7 +16,8 @@ def main():
         arg_list.append(arg)
 
     if len(arg_list) != 3:
-        print('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ /ImageData/augmentedtraining/')
+        print('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ ')
+        print('/ImageData/training/labels/ /ImageData/augmentedtraining/')
         return
 
     trainig_img_path = arg_list[0]
@@ -117,7 +118,7 @@ def main():
         print('\n-> Training data augmentation completed')
         print('Training data stored in ', outdir)
         print('For training your model please run runtraining.sh ',
-               outdir, '<desired output directory>\n')
+             outdir, '<desired output directory>\n')
 
 
 if __name__ == "__main__":
