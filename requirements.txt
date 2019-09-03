@@ -20,3 +20,4 @@ python-gflags
 pyyaml
 Pillow
 six
+tensorflow
