@@ -288,7 +288,7 @@ def Resize(images, labels, scale, dir):
             augmented_images, augmented_labels = check_img_dims(
                 np.asarray(augmented_images), np.asarray(augmented_labels), 325)
 
-   # upscale
+    # upscale
     if dir == 1:
         maxs = uniform(newscale[1], newscale[2])
         max_x = int(images[0].shape[0] * maxs)
