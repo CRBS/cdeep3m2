@@ -7,8 +7,8 @@ from keras.optimizers import Adam
 from MultiResUnet import MultiResUnet
 from keras.utils import multi_gpu_model
 from keras.models import Sequential, load_model
-#from keras import backend as K
-#print (K.backend())
+# from keras import backend as K
+# print (K.backend())
 from tensorflow.python.client import device_lib
 
 
@@ -17,18 +17,18 @@ def get_available_gpus():
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
 
-print ("GPU's: ", get_available_gpus())
+print("GPU's: ", get_available_gpus())
 
-#model = MultiResUnet(1024, 1024,1)
-#model = MultiResUnet(256, 256,1)
-#model = load_model("multiresunet_membrane.h5")
+# model = MultiResUnet(1024, 1024,1)
+# model = MultiResUnet(256, 256,1)
+# model = load_model("multiresunet_membrane.h5")
 model = load_model("multiresunet_membrane_1024.h5")
-#model = multi_gpu_model(model, gpus=1)
+# model = multi_gpu_model(model, gpus=1)
 lr = 0.01
 opt = Adam(lr=0.001, decay=1e-6)
 batch_size = 8
 numberOfIterations = 100
-#multiresunet_model.compile(optimizer=sgd, loss = 'binary_crossentropy', metrics = ['accuracy'])
+# multiresunet_model.compile(optimizer=sgd, loss = 'binary_crossentropy', metrics = ['accuracy'])
 model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
 
 model_checkpoint = ModelCheckpoint(
@@ -40,17 +40,17 @@ model_checkpoint = ModelCheckpoint(
 image_datagen = ImageDataGenerator()
 mask_datagen = ImageDataGenerator()
 
-#h5_folder = '/scratch/converted_all_python/test_testsample_processed'
-#h5_folder = '/scratch/converted_all_python/test_testsample_processed/converted/'
+# h5_folder = '/scratch/converted_all_python/test_testsample_processed'
+# h5_folder = '/scratch/converted_all_python/test_testsample_processed/converted/'
 h5_folder = '/scratch/test_training/prashant_augmentedtraining/converted/'
 for iteration in range(numberOfIterations):
-    print ("Iteration = ", iteration)
+    print("Iteration = ", iteration)
     for file_name in os.listdir(h5_folder):
-        print ("Training on ", file_name)
+        print("Training on ", file_name)
         if file_name.endswith('h5'):
 
-            #X_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'data')
-            #y_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'label')
+            # X_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'data')
+            # y_train = HDF5Matrix(os.path.join(h5_folder, file_name), 'label')
 
             f = h5py.File(os.path.join(h5_folder, file_name), 'r')
             num_images = f['data'].shape[0]
@@ -62,8 +62,8 @@ for iteration in range(numberOfIterations):
                     X_train = f['data'][i:, :, :, :]
                     y_train = f['label'][i:, :, :, :]
 
-                #X_train = f['data'][0:8, :, :, :]
-                #y_train = f['label'][0:8, :, :, :]
+                # X_train = f['data'][0:8, :, :, :]
+                # y_train = f['label'][0:8, :, :, :]
 
                 image_generator = image_datagen.flow(X_train, None)
                 mask_generator = mask_datagen.flow(y_train, None)
@@ -77,6 +77,6 @@ for iteration in range(numberOfIterations):
                     epochs=1,
                     callbacks=[model_checkpoint])
 
-            print ("Training completed on ", file_name)
+            print("Training completed on ", file_name)
 
-print ("Hurry!! Training Completed")
+print("Hurry!! Training Completed")
