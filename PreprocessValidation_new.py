@@ -63,7 +63,7 @@ print('Verifying labels')
 checkpoint_isbinary(lblstack)
 
 # ----------------------------------------------------------------------------------------
-## Convert and save
+# Convert and save
 # ----------------------------------------------------------------------------------------
 
 img = imgstack.astype('float32')
