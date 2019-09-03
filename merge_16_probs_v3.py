@@ -91,13 +91,13 @@ def merge_16_probs_v3(folder):
                 image.append(inputim)
         # {
         # To check if 16 variations are good uncomment here
-        #output_filename = os.path.join(folder, "%s_%04d.tiff" % (filebasename, (fff+1)))
+        # output_filename = os.path.join(folder, "%s_%04d.tiff" % (filebasename, (fff+1)))
         # for z in range(1, 17):
         #    imwrite(sixteen_vars(:,:,z),output_filename,'WriteMode','append');
         #    print("Saving: %s ... Image #%s   \n" %(output_filename, str(z)))
         # }
         # print(np.shape(image))
-        #print('Dim2:', np.shape(image))
+        # print('Dim2:', np.shape(image))
         # if np.shape(image)[0]>1:
         image = np.mean(image, 0)
 
@@ -116,15 +116,16 @@ def merge_16_probs_v3(folder):
             skimage.io.imsave(output_filename, skimage.img_as_ubyte(image))
         # tiff_file_save=[folder filesep 'ave_16.tiff'];
 
-        # tried different weighting of 16v predictions, using mode instead of average -> need to test if better but currently slow
+        # tried different weighting of 16v predictions, using mode instead of average -> 
+        # need to test if better but currently slow
         # {
-        #image2 = mode(sixteen_vars,3)
-        #outdir2=os.path.join(folder, 'de_augmented_mode_weighting')
+        # image2 = mode(sixteen_vars,3)
+        # outdir2=os.path.join(folder, 'de_augmented_mode_weighting')
         # os.mkdir(outdir2)
-        #output_filename2=os.path.join(outdir2, '%s_%04d.png' %(filebasename, (fff+1)))
+        # output_filename2=os.path.join(outdir2, '%s_%04d.png' %(filebasename, (fff+1)))
         # delete(filename);
-        #print('write: ', output_filename2)
-        #skimage.io.imsave(output_filename2, image2)
+        # print('write: ', output_filename2)
+        # skimage.io.imsave(output_filename2, image2)
         # }
 
     # {
