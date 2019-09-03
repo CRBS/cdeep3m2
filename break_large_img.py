@@ -1,4 +1,3 @@
-
 # Defines how to read large images
 # Note: Packages define X/Y direction only;
 # z_blocks define splitting z direction
@@ -15,8 +14,8 @@ def break_large_img(imagesize):
             temp = z_blocks[:-2]
             temp.append(z_blocks[-1])
             z_blocks = temp
-        print ('Data will be split in z direction at planes:')
-        print (z_blocks)
+        print('Data will be split in z direction at planes:')
+        print(z_blocks)
     else:
         z_blocks = [0, imagesize[2]]
 
