@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def checkpoint_nobinary(imagestack):
     if len(np.unique(imagestack[:])) < 3:
         print('Images are not 8 or 16bit')
