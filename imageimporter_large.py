@@ -28,7 +28,7 @@ def imageimporter_large(img_path, area, z_stack, outfolder):
             imgstack = [h5file[key].value for key in h5file.keys()]
             imgstack = imgstack[area[0]:area[1],
                                 area[2]:area[3], z_stack[0]:z_stack[1]]
-            print ('Processed size:', imgstack.shape)
+            print('Processed size:', imgstack.shape)
         elif '.tif' in ext:
             im = pilimage.open(img_path)
             image_array = np.array(im)
