@@ -1,3 +1,4 @@
+setuptools>=36
 h5py
 joblib
 keras
