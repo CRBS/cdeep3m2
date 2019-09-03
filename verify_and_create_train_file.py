@@ -1,4 +1,4 @@
-## Usage [status, errmsg, train_file, valid_file] = verify_and_create_train_file ( train_input, outdir, valid_input="" )
+# Usage [status, errmsg, train_file, valid_file] = verify_and_create_train_file ( train_input, outdir, valid_input="" )
 ##
 # 1st Looks for files ending with .h5 in train_input directory
 # and verifies there are 16 of them. 2nd code creates a
