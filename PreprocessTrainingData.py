@@ -129,7 +129,7 @@ def main():
             img, lb = augment_data(img_v1, lb_v1, i)
             img_n, lb_n = img.astype(
                 np.uint8), lb.astype(
-                np.uint8)  # augmentations 1-8
+                    np.uint8)  # augmentations 1-8
             inv_img_n = np.flip(img, 0).astype(np.uint8)  # augmentations 9-16
             inv_lb_n = np.flip(lb, 0).astype(np.uint8)  # augmentations 9-16
             del img, lb
@@ -176,7 +176,7 @@ def main():
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)
     print('For training your model please run runtraining.sh ',
-          outdir, '<desired output directory>\n')
+         outdir, '<desired output directory>\n')
 
 
 if __name__ == "__main__":
