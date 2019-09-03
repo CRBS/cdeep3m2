@@ -40,8 +40,8 @@ def run_train(arg_list):
     print("base_dir is: ", base_dir)
 
     if len(arg_list) < 2:
-        print ('run_train expects at least two command line arguments\n\n')
-        msg = 'Usage: run_train <Input train data directory> <output directory> <validatoin data directory> (validation data is optional)\n'
+        print('run_train expects at least two command line arguments\n\n')
+        msg = 'Usage: run_train <Input train data directory> <output directory> <validatoin data directory>(validation data is optional)\n'
         raise Exception(msg)
 
     in_img_path = arg_list[1]
@@ -61,7 +61,7 @@ def run_train(arg_list):
     # Examine input training data and generate list of h5 files
     # ---------------------------------------------------------------------------
 
-    print ('Verifying input training data is valid ... ')
+    print('Verifying input training data is valid ... ')
     (status,
      errmsg,
      train_file,
@@ -72,13 +72,13 @@ def run_train(arg_list):
     if status != 0:
         raise Exception(errmsg)
 
-    print ('success')
+    print('success')
 
     # ----------------------------------------------------------------------------
     # Create output directory and copy over model files and
     # adjust configuration files
     # ----------------------------------------------------------------------------
-    print ('Copying over model files and creating run scripts ... ')
+    print('Copying over model files and creating run scripts ... ')
 
     (onefm_dest, threefm_dest,
      fivefm_dest) = copy_over_allmodels.copy_over_allmodels(base_dir, outdir)
@@ -97,11 +97,11 @@ def run_train(arg_list):
 
     copy_version.copy_version(base_dir, outdir)
     write_train_readme.write_train_readme(outdir)
-    print ('success\n\n')
+    print('success\n\n')
 
-    print ('A new directory has been created: ' + outdir)
-    print ('In this directory are 3 directories 1fm,3fm,5fm which')
-    print ('correspond to 3 caffe models that need to be trained')
+    print('A new directory has been created: ' + outdir)
+    print('In this directory are 3 directories 1fm,3fm,5fm which')
+    print('correspond to 3 caffe models that need to be trained')
 
 
 if __name__ == "__main__":
