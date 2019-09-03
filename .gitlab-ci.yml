@@ -39,6 +39,16 @@ pylint:
   tags:
   - vm
 
+shell check:
+  image: koalaman/shellcheck-alpine
+  stage: Static Analysis
+  before_script:
+    - shellcheck --version
+  script:
+    - shellcheck scripts/**/*.sh
+  tags:
+  - vm 
+
 unit_test:
   stage: Test
   script:
