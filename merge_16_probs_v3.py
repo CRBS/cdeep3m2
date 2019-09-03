@@ -41,13 +41,13 @@ def merge_16_probs_v3(folder):
 
             if os.path.isdir(folder_name):
                 filename = os.path.join(folder_name, loadfile)
-                #fileinfo = h5info(filename);
-                #load_im = h5read(filename, '/data');
+                # fileinfo = h5info(filename);
+                # load_im = h5read(filename, '/data');
                 load_im = h5py.File(filename, mode='r')
                 load_im = list(load_im['/data'])
                 print('H5 Dimensions: ', np.shape(load_im))
                 # scale = max(max(load_im(:,:,2)));
-                #inputim = np.transpose(load_im[0][1, :, :])
+                # inputim = np.transpose(load_im[0][1, :, :])
                 inputim = load_im[0][1, :, :]
                 inputim = {
                     0: inputim,
@@ -76,7 +76,7 @@ def merge_16_probs_v3(folder):
                 load_im = h5py.File(filename, mode='r')
                 load_im = list(load_im['/data'])
                 # scale = max(max(load_im(:,:,2)));
-                #inputim = np.transpose(load_im[0][1, :, :])
+                # inputim = np.transpose(load_im[0][1, :, :])
                 inputim = load_im[0][1, :, :]
                 inputim = {
                     0: inputim,
