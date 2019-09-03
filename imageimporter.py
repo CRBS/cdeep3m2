@@ -62,7 +62,7 @@ imageimporter: loads image data from folder or from an individual image stack
                     1) for filename in file_list]
             # imgstack = np.array([pilimage.open(os.path.join(img_path,file_list[i])) for i in range(0, len(file_list))])
             shape = np.shape(imgstack)
-            print (shape)
+            print(shape)
     else:
         raise Exception('No images found')
         return
