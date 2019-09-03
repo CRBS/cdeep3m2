@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 import cv2
-#import skimage
+# import skimage
 import numpy as np
 
 image_dir = '/scratch/test_tutorial/test_testsample/testset_bigimage/'
@@ -16,4 +16,4 @@ for filename in os.listdir(image_dir):
         im = np.array(im)
         fname = filename + '_4096.png'
         cv2.imwrite(os.path.join(outdir, fname), im[0:4096, 0:4096])
-        #skimage.io.imsave(os.path.join(outdir, fname), skimage.img_as_ubyte(im), as_grey=True)
+        # skimage.io.imsave(os.path.join(outdir, fname), skimage.img_as_ubyte(im), as_grey=True)
