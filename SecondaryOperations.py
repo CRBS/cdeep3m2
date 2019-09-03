@@ -249,7 +249,7 @@ def ElasticDistortion(images, labels, sigma):
         indices_n = (
             np.expand_dims(
                 linfit_0(i), axis=1), np.expand_dims(
-                linfit_1(i), axis=1))
+                    linfit_1(i), axis=1))
         distorted_image = map_coordinates(
             images[j][:, :, 0], indices_n, order=1, mode='reflect')
         reshaped_img = distorted_image.reshape(images[j][:, :, 0].shape)
