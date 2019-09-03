@@ -20,7 +20,8 @@ from read_files_in_folder import read_files_in_folder
 tic = time.time()
 
 if len(sys.argv) < 3:
-    print('Please specify more than one input directory to average: EnsemblePredictions ./inputdir1 ./inputdir2 ./inputdir3 ./outputdir\n')
+    print('Please specify more than one input directory to average: ')
+    print{'EnsemblePredictions ./inputdir1 ./inputdir2 ./inputdir3 ./outputdir\n')
     exit()
 
 png_list = [None] * (len(sys.argv) - 2)
