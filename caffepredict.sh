@@ -1,14 +1,14 @@
 #!/bin/bash
 
 
-script_dir=`dirname "$0"`
-script_name=`basename $0`
+script_dir=$(dirname "$0")
+script_name=$(basename "$0")
 version="???"
-
+# shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
 if [ -f "$script_dir/VERSION" ] ; then
-   version=`cat $script_dir/VERSION`
+   version=$(cat "$script_dir"/VERSION)
 fi
 
 gpu="all"
@@ -44,7 +44,7 @@ optional arguments:
    exit 1;
 }
 
-TEMP=`getopt -o h --long "help,gpu:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h --long "help,gpu:" -n '$0' -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
@@ -74,9 +74,9 @@ if [ -d "$model" ] ; then
   if [ "$latest_iteration" == "" ] ; then
      fatal_error "$out_dir" "ERROR no #.caffemodel files found" 2
   fi
-  model=`find "$model" -name "*${latest_iteration}.caffemodel" -type f`
+  model=$(find "$model" -name "*${latest_iteration}.caffemodel" -type f)
 else
-  model_dir=`dirname "$model"`
+  model_dir=$(dirname "$model")`
 fi
 
 deploy_dir="$model_dir/.."
@@ -91,12 +91,12 @@ if [ $? != 0 ] ; then
   fatal_error "$out_dir" "ERROR unable to create $log_dir" 3
 fi
 
-gpucount=`nvidia-smi -L | wc -l`
+gpucount=$(nvidia-smi -L | wc -l)
 if [ "$gpucount" -eq 0 ] ; then
   fatal_error "$out_dir" "ERROR unable to get count of GPU(s). Is nvidia-smi working?" 4
 fi
 
-let maxgpuindex=$gpucount-1
+(( maxgpuindex=$gpucount-1 ))
 
 if [ $maxgpuindex -gt 0 ] ; then
   echo -n "Detected $gpucount GPU(s)."
@@ -110,18 +110,18 @@ else
 fi
 
 if [ "$gpu" == "all" ] ; then
-  let cntr=0
+  (( cntr=0 ))
 else
-  let cntr=$gpu
-  let gpucount=1
+  (( cntr=$gpu ))
+  (( gpucount=1 ))
 fi
 
 theargs=""
 parallel_job_file="$out_dir/parallel.jobs"
-for input_file in `find "${in_dir}" -name "*.h5" -type f | sort -V` ;
+for input_file in $(find "${in_dir}" -name "*.h5" -type f | sort -V) ;
   do
   
-  idx=`echo $input_file | sed "s/^.*_v//" | sed "s/\.h5$//"`
+  idx=$(echo "$input_file" | sed "s/^.*_v//" | sed "s/\.h5$//")
   predict_dir=$out_dir/v$idx;
 
   if [ ! -d "$predict_dir" ]; then
