@@ -1,11 +1,11 @@
 #!/bin/bash
 
-script_dir=`dirname "$0"`
-script_name=`basename $0`
+script_dir=$(dirname "$0")
+script_name=$(basename "$0")
 version="???"
 
 if [ -f "$script_dir/VERSION" ] ; then
-   version=`cat $script_dir/VERSION`
+   version=$(cat "$script_dir"/VERSION)
 fi
 # shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
@@ -72,7 +72,7 @@ optional arguments:
    exit 1;
 }
 
-TEMP=`getopt -o h --long "gpu:,numiterations:,base_learn:,power:,momentum:,weight_decay:,average_loss:,lr_policy:,iter_size:,snapshot_interval:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h --long "gpu:,numiterations:,base_learn:,power:,momentum:,weight_decay:,average_loss:,lr_policy:,iter_size:,snapshot_interval:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
@@ -157,13 +157,13 @@ latest_iteration=$(get_latest_iteration "$model_dir/trainedmodel")
 snapshot_opts=""
 # we got a completed iteration lets start from that
 if [ ! "$latest_iteration" == "" ] ; then
-  snap_file=`find "$model_dir/trainedmodel" -name "*${latest_iteration}.solverstate" -type f`
+  snap_file=$(find "$model_dir/trainedmodel" -name "*${latest_iteration}.solverstate" -type f)
   snapshot_opts="--snapshot=$snap_file"
   echo "Resuming run from snapshot file: $snap_file"
 fi
 
 pushd "$model_dir" > /dev/null
-GLOG_log_dir=$log_dir $CAFFE_PATH/.build_release/tools/caffe.bin train --solver=$model_dir/solver.prototxt --gpu $gpu $snapshot_opts > "${model_dir}/log/out.log" 2>&1
+GLOG_log_dir=$log_dir "$CAFFE_PATH"/.build_release/tools/caffe.bin train --solver="$model_dir"/solver.prototxt --gpu "$gpu" "$snapshot_opts" > "${model_dir}/log/out.log" 2>&1
 exitcode=$?
 popd > /dev/null
 
@@ -171,5 +171,5 @@ if [ $exitcode != 0 ] ; then
   echo "ERROR: caffe had a non zero exit code: $exitcode"
 fi
 
-exit $exitcode
+exit "$exitcode"
 
