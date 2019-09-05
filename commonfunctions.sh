@@ -9,7 +9,7 @@ function fatal_error {
     echo "$errmsg" >> "$jobdir/KILL.REQUEST"
     if [ -n "$ecode" ] ; then
         echo "$ecode" >> "$jobdir/ERROR"
-        exit $ecode
+        exit "$ecode"
     fi
 }
 
@@ -20,7 +20,7 @@ function copy_trained_models {
     local src=$1
     local dest=$2
     local res=""
-    for Y in `echo "1fm 3fm 5fm"` ; do
+    for Y in $(echo "1fm 3fm 5fm") ; do
         if [ ! -d "$src/$Y/trainedmodel" ] ; then
             continue
         fi
@@ -66,7 +66,7 @@ function get_latest_iteration {
 # the iteration value from .solverstate
 # file in directory
     local trainedmodeldir=$1
-    local latest_iteration=`ls "$trainedmodeldir" | egrep "\.solverstate$" | sed "s/^.*iter_//" | sed "s/\.solverstate//" | sort -g | tail -n 1`
+    local latest_iteration=$(ls "$trainedmodeldir" | egrep "\.solverstate$" | sed "s/^.*iter_//" | sed "s/\.solverstate//" | sort -g | tail -n 1)
     echo "$latest_iteration"
 }
 
@@ -77,16 +77,16 @@ function get_package_name {
 # for packages. Namely Pkg###_Z##
     local rawpkg=$1
     local rawz=$2
-    curpkg=`echo "$rawpkg" | sed "s/^0*//"`
-    curz=`echo "$rawz" | sed "s/^0*//"`
-    local pad_pkg=`printf "%03d" $curpkg`
-    local pad_z=`printf "%02d" $curz`
+    curpkg=$(echo "$rawpkg" | sed "s/^0*//")
+    curz=$(echo "$rawz" | sed "s/^0*//")
+    local pad_pkg=$(printf "%03d" "$curpkg")
+    local pad_z=$(printf "%02d" "$curz")
     echo "Pkg${pad_pkg}_Z${pad_z}"
 }
 
 function get_number_done_files_in_dir {
     local thedir=$1
-    number_done_files=`find "$thedir" -name "DONE" -type f | wc -l`
+    number_done_files=$(find "$thedir" -name "DONE" -type f | wc -l)
     echo "$number_done_files"
 }
 
@@ -105,7 +105,7 @@ function wait_for_predict_to_finish_on_package {
             echo "killed"
             return 0
         fi
-        sleep $wait_time
+        sleep "$wait_time"
     done
     echo ""
 }
@@ -117,7 +117,7 @@ function wait_for_prediction_to_catchup {
   
     local num_pkgs=$(get_number_done_files_in_dir "$augimages")
     while [ "$num_pkgs" -gt "$max_pkgs" ] ; do
-        sleep $wait_time
+        sleep "$wait_time"
         num_pkgs=$(get_number_done_files_in_dir "$augimages")
         if [ -f "$augimages/KILL.REQUEST" ] ; then
             echo "killed"
@@ -141,7 +141,7 @@ function wait_for_preprocess_to_finish_on_package {
              echo "killed"
              return 0
          fi
-        sleep $wait_time
+        sleep "$wait_time"
     done
     echo ""
 }
@@ -161,13 +161,13 @@ function parse_package_processing_info {
 # $tot_pkgs to $num_pkgs*$num_zstacks
   
     local package_proc_info=$1
-    num_pkgs=`head -n 3 $package_proc_info | tail -n 1`
-    num_zstacks=`tail -n 1 $package_proc_info`
+    num_pkgs=$(head -n 3 "$package_proc_info" | tail -n 1)
+    num_zstacks=$(tail -n 1 "$package_proc_info")
     let tot_pkgs=$num_pkgs*$num_zstacks
 }
 
 function get_models_as_space_separated_list {
-    local space_sep_models=`echo "$1" | sed "s/,/ /g"`
+    local space_sep_models=$(echo "$1" | sed "s/,/ /g")
     echo "$space_sep_models"
 }
 
@@ -179,7 +179,7 @@ function get_number_of_models {
         echo "0"
         return 0
     fi
-    local model_count=`echo "$1" | sed "s/,/\n/g" | wc -l`
+    local model_count=$(echo "$1" | sed "s/,/\n/g" | wc -l)
     echo "$model_count"
 }
 
@@ -213,28 +213,28 @@ function parse_predict_config {
         return 2
     fi
 
-    trained_model_dir=`egrep "^ *trainedmodeldir *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//"`
+   trained_model_dir=$(egrep "^ *trainedmodeldir *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//")
 
     if [ -z "$trained_model_dir" ] ; then
         echo "ERROR unable to extract trainedmodeldir from $predict_config"
         return 3
     fi
 
-    img_dir=`egrep "^ *imagedir *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//"`
+    img_dir=$(egrep "^ *imagedir *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//")
 
     if [ -z "$img_dir" ] ; then
         echo "ERROR unable to extract imagedir from $predict_config"
         return 4
     fi
 
-    model_list=`egrep "^ *models *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//"`
+    model_list=$(egrep "^ *models *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//")
 
     if [ -z "$model_list" ] ; then
         echo "ERROR unable to extract models from $predict_config"
         return 5
     fi
 
-    aug_speed=`egrep "^ *augspeed *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//"`
+    aug_speed=$(egrep "^ *augspeed *=" "$predict_config" | sed "s/^.*=//" | sed "s/^ *//")
 
     if [ -z "$aug_speed" ] ; then
         echo "ERROR unable to extract augspeed from $predict_config"
