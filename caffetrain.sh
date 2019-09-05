@@ -7,7 +7,7 @@ version="???"
 if [ -f "$script_dir/VERSION" ] ; then
    version=`cat $script_dir/VERSION`
 fi
-
+# shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
 numiterations="30000"
