@@ -76,7 +76,7 @@ if [ -d "$model" ] ; then
   fi
   model=$(find "$model" -name "*${latest_iteration}.caffemodel" -type f)
 else
-  model_dir=$(dirname "$model")`
+  model_dir=$(dirname "$model")
 fi
 
 deploy_dir="$model_dir/.."
