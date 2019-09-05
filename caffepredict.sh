@@ -44,7 +44,7 @@ optional arguments:
    exit 1;
 }
 
-TEMP=$(getopt -o h --long "help,gpu:" -n '$0' -- "$@")
+TEMP=$(getopt -o h --long "help,gpu:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
@@ -70,7 +70,7 @@ done_file="$out_dir/PREDICTDONE"
 
 if [ -d "$model" ] ; then
   model_dir="$model"
-  latest_iteration=`ls "$model" | egrep "\.caffemodel$" | sed "s/^.*iter_//" | sed "s/\.caffemodel//" | sort -g | tail -n 1`
+  latest_iteration=$(ls "$model" | egrep "\.caffemodel$" | sed "s/^.*iter_//" | sed "s/\.caffemodel//" | sort -g | tail -n 1)
   if [ "$latest_iteration" == "" ] ; then
      fatal_error "$out_dir" "ERROR no #.caffemodel files found" 2
   fi
@@ -132,11 +132,11 @@ for input_file in $(find "${in_dir}" -name "*.h5" -type f | sort -V) ;
       fatal_error "$out_dir" "ERROR unable to create $predict_dir" 5
     fi
   fi
-  echo -e "$log_dir\n$deploy_dir\n$model\n$input_file\n$predict_dir\n$cntr" >> $parallel_job_file
+  echo -e "$log_dir\n$deploy_dir\n$model\n$input_file\n$predict_dir\n$cntr" >> "$parallel_job_file"
   if [ "$gpu" == "all" ] ; then
-    let cntr++
+    (( cntr++ ))
     if [ $cntr -gt $maxgpuindex ] ; then
-      let cntr=0
+      (( cntr=0 ))
     fi
   fi
 done
@@ -168,7 +168,7 @@ cmdsran="$out_dir/cmdruns"      # STORES THE COMMANDS THAT WERE ALREADY RUN
 
 
 
-for line in `cat $parallel_job_file`; do     # EACH LINE IN THE parallel.jobs FILE
+for line in $(cat "$parallel_job_file"); do     # EACH LINE IN THE parallel.jobs FILE
   case $line_cnt in
     # GLOG, model, weights, input and output
     [0-4]*)
@@ -176,7 +176,7 @@ for line in `cat $parallel_job_file`; do     # EACH LINE IN THE parallel.jobs FI
     ;;
     # The gpu number makes the final command string
     5)
-    echo "GLOG_logtostderr=\"${job_array[0]}\" /usr/bin/time -p $CAFFE_PATH/.build_release/tools/predict_seg_new.bin --model=${job_array[1]}/deploy.prototxt --weights=${job_array[2]} --data=${job_array[3]} --predict=${job_array[4]}/test.h5 --shift_axis=2 --shift_stride=1 --gpu=$line >> \"$out_log\" 2>&1" >> $cmdlets
+    echo "GLOG_logtostderr=\"${job_array[0]}\" /usr/bin/time -p $CAFFE_PATH/.build_release/tools/predict_seg_new.bin --model=${job_array[1]}/deploy.prototxt --weights=${job_array[2]} --data=${job_array[3]} --predict=${job_array[4]}/test.h5 --shift_axis=2 --shift_stride=1 --gpu=$line >> \"$out_log\" 2>&1" >> "$cmdlets"
     ;;
     *)
     echo "I should never be here in default"
@@ -186,18 +186,18 @@ for line in `cat $parallel_job_file`; do     # EACH LINE IN THE parallel.jobs FI
   # IF THE line_cnt HAS REACHED 5 A COMMAND HAS BEEN BUILT
   # IF THE job_count HAS REACHED THE gpucount RUN THE NUMBER OF JOBS
   # IN PARALLEL THAT CAN BE RUN
-  if [ $line_cnt == 5 ]; then                       # IF THE LINE COUNT IS 5 THEN A COMMAND IS READY
-    line_cnt=0                                      # RESET THE CURRENT LINE COUNT
-    ((job_count++))                                 # ADD A JOB
-    if [ $job_count == $gpucount ]; then            # IF THE job_count HAS REACHED IT'S MAX (gpucount)
-      parallel --no-notice -j $gpucount < $cmdlets  # RUN THE CURRENT JOB QUEUE
+  if [ $line_cnt == 5 ]; then                         # IF THE LINE COUNT IS 5 THEN A COMMAND IS READY
+    line_cnt=0                                        # RESET THE CURRENT LINE COUNT
+    ((job_count++))                                   # ADD A JOB
+    if [ $job_count == $gpucount ]; then              # IF THE job_count HAS REACHED IT'S MAX (gpucount)
+      parallel --no-notice -j $gpucount < "$cmdlets"  # RUN THE CURRENT JOB QUEUE
       ecode=$?
       if [ $ecode != 0 ] ; then
         fatal_error "$out_dir" "ERROR non-zero exit code ($ecode) from running predict_seg_new.bin" 6
       fi  
       job_count=0                                   # RESET THE JOB COUNT
-      cat $cmdlets >> $cmdsran                      # TRACK THE COMMANDS THAT WERE RUN
-      rm -f $cmdlets                                # CLEAN OLD COMMANDS
+      cat "$cmdlets" >> "$cmdsran"                  # TRACK THE COMMANDS THAT WERE RUN
+      rm -f "$cmdlets"                              # CLEAN OLD COMMANDS
     fi
   else
     ((line_cnt++))                                  # INCREMENT THE CURRENT LINE COUNT
@@ -207,13 +207,13 @@ done # END - for line in `cat $parallel_job_file`; do
 
 # CHECK TO SEE IF THERE ARE ANY JOBS STILL PENDING AND RUN THEM
 if [ $job_count -gt 0 ]; then
-  parallel --no-notice -j $gpucount < $cmdlets
+  parallel --no-notice -j $gpucount < "$cmdlets"
   ecode=$?
   if [ $ecode != 0 ] ; then
     fatal_error "$out_dir" "ERROR non-zero exit code ($ecode) from running predict_seg_new.bin" 6
   fi
-  cat $cmdlets >> $cmdsran
-  rm -f $cmdlets
+  cat "$cmdlets" >> "$cmdsran"
+  rm -f "$cmdlets"
 fi
 
 echo ""
