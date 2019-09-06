@@ -1,11 +1,11 @@
 #!/bin/bash
 
-script_name=`basename $0`
-script_dir=`dirname $0`
+script_name=$(basename "$0")
+script_dir=$(dirname "$0")
 version="???"
 
 if [ -f "$script_dir/VERSION" ] ; then
-   version=`cat $script_dir/VERSION`
+   version=$(cat "$script_dir"/VERSION)
 fi
 
 numiterations="30000"
@@ -66,7 +66,7 @@ optional arguments:
    exit 1;
 }
 
-TEMP=`getopt -o h --long "models:,gpu:,numiterations:,base_learn:,power:,momentum:,weight_decay:,average_loss:,lr_policy:,iter_size:,snapshot_interval:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h --long "models:,gpu:,numiterations:,base_learn:,power:,momentum:,weight_decay:,average_loss:,lr_policy:,iter_size:,snapshot_interval:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
@@ -95,14 +95,14 @@ trainoutdir=$1
 
 echo ""
 
-let maxgpuindex=0
-gpucount=`nvidia-smi -L | wc -l`
+(( maxgpuindex=0 ))
+gpucount=$(nvidia-smi -L | wc -l)
 if [ "$gpucount" -eq 0 ] ; then
   echo "ERROR unable to get count of GPU(s). Is nvidia-smi working?"
   exit 4
 fi
 
-let maxgpuindex=$gpucount-1
+(( maxgpuindex=$gpucount-1 ))
 
 if [ $maxgpuindex -gt 0 ] ; then
   echo -n "Detected $gpucount GPU(s)."
@@ -116,24 +116,24 @@ else
 fi
 
 if [ "$gpu" == "all" ] ; then
-  let cntr=0
+  (( cntr=0 ))
 else
-  let cntr=$gpu
-  let gpucount=1
+  (( cntr=$gpu ))
+  (( gpucount=1 ))
 fi
 
 parallel_job_file="$trainoutdir/parallel.jobs"
 
-for model_name in `echo "$model_list" | sed "s/,/ /g"` ; do
+for model_name in $(echo "$model_list" | sed "s/,/ /g") ; do
   if [ ! -d "$trainoutdir/$model_name" ] ; then
     echo "ERROR, no $trainoutdir/$model_name directory found."
     exit 2
   fi
-  echo -e "$numiterations\n$cntr\n$base_lr\n$power\n$momentum\n$weight_decay\n$average_loss\n$lr_policy\n$iter_size\n$snapshot_interval\n$model_name\n$trainoutdir" >> $parallel_job_file
+  echo -e "$numiterations\n$cntr\n$base_lr\n$power\n$momentum\n$weight_decay\n$average_loss\n$lr_policy\n$iter_size\n$snapshot_interval\n$model_name\n$trainoutdir" >> "$parallel_job_file"
   if [ "$gpu" == "all" ] ; then
-    let cntr++
+    (( cntr++ ))
     if [ $cntr -gt $maxgpuindex ] ; then
-      let cntr=0
+      (( cntr=0 ))
     fi  
   fi
 done
@@ -142,7 +142,7 @@ done
 # without this jobs would fail on GPU with out of memory error
 #
  
-cat $parallel_job_file | parallel --no-notice --delay 2 -N 12 -j $gpucount ${script_dir}/caffetrain.sh --numiterations {1} --gpu {2} --base_learn {3} --power {4} --momentum {5} --weight_decay {6} --average_loss {7} --lr_policy {8} --iter_size {9} --snapshot_interval {10} {11} {12}
+cat "$parallel_job_file" | parallel --no-notice --delay 2 -N 12 -j $gpucount "${script_dir}"/caffetrain.sh --numiterations {1} --gpu {2} --base_learn {3} --power {4} --momentum {5} --weight_decay {6} --average_loss {7} --lr_policy {8} --iter_size {9} --snapshot_interval {10} {11} {12}
   if [ $? != 0 ] ; then
     echo "Non zero exit code from caffe for train of model. Exiting."
     exit 1
