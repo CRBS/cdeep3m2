@@ -142,7 +142,7 @@ if [ -n "$retrain" ] ; then
     latest_iteration=$(get_latest_iteration "$retrain/1fm/trainedmodel")
     if [ -n "$latest_iteration" ] ; then
         echo "Latest iteration found in 1fm from $retrain is $latest_iteration"
-        (() numiterations=$latest_iteration+$additerations ))
+        (( numiterations=$latest_iteration+$additerations ))
         echo "Adding $additerations iterations so will now run to $numiterations iterations"
     else
         echo "No models $retrain/1fm/trainedmodel leaving numiterations at $numiterations"
