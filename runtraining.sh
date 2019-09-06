@@ -2,14 +2,14 @@
 
 
 
-script_name=`basename $0`
-script_dir=`dirname $0`
+script_name=$(basename "$0")
+script_dir=$(dirname "$0")
 version="???"
 
 if [ -f "$script_dir/VERSION" ] ; then
-   version=`cat $script_dir/VERSION`
+   version=$(cat "$script_dir"/VERSION)
 fi
-
+# shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
 numiterations="30000"
@@ -88,11 +88,11 @@ optional arguments:
    #exit 1;
 }
 
-TEMP=`getopt -o h -l "1fmonly,numiterations:,gpu:,base_learn:,power:,momentum:,weight_decay:,average_loss:,lr_policy:,iter_size:,snapshot_interval:,validation_dir:,retrain:,additerations:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h -l "1fmonly,numiterations:,gpu:,base_learn:,power:,momentum:,weight_decay:,average_loss:,lr_policy:,iter_size:,snapshot_interval:,validation_dir:,retrain:,additerations:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
-    echo $1
+    echo "$1"
     case "$1" in
         -h ) usage ;; 
         --1fmonly ) one_fmonly="--models 1fm " ; shift ;;
@@ -125,8 +125,8 @@ declare -r train_out=$2
 if [ -z "$validation_dir" ] ; then 
     validation_dir=$aug_train
 fi
-echo $aug_train
-python3 $script_dir/run_train.py "$aug_train" "$train_out" "$validation_dir"
+echo "$aug_train"
+python3 "$script_dir"/run_train.py "$aug_train" "$train_out" "$validation_dir"
 ecode=$?
 if [ $ecode != 0 ] ; then
     echo "Error, a non-zero exit code ($ecode) was received from: python3 \"$aug_train\" \"$train_out\" \"$validation_dir\""
@@ -142,7 +142,7 @@ if [ -n "$retrain" ] ; then
     latest_iteration=$(get_latest_iteration "$retrain/1fm/trainedmodel")
     if [ -n "$latest_iteration" ] ; then
         echo "Latest iteration found in 1fm from $retrain is $latest_iteration"
-        let numiterations=$latest_iteration+$additerations
+        (() numiterations=$latest_iteration+$additerations ))
         echo "Adding $additerations iterations so will now run to $numiterations iterations"
     else
         echo "No models $retrain/1fm/trainedmodel leaving numiterations at $numiterations"
@@ -155,7 +155,7 @@ if [ -n "$retrain" ] ; then
     echo "$res"   
 fi
 
-${script_dir}/trainworker.sh ${one_fmonly}--numiterations $numiterations --gpu $gpu --base_learn $base_lr --power $power --momentum $momentum --weight_decay $weight_decay --average_loss $average_loss --lr_policy $lr_policy --iter_size $iter_size --snapshot_interval $snapshot_interval "$train_out"
+"${script_dir}"/trainworker.sh "${one_fmonly}"--numiterations $numiterations --gpu "$gpu" --base_learn "$base_lr" --power "$power" --momentum "$momentum" --weight_decay "$weight_decay" --average_loss "$average_loss" --lr_policy "$lr_policy" --iter_size "$iter_size" --snapshot_interval "$snapshot_interval" "$train_out"
 ecode=$?
 if [ $ecode != 0 ] ; then
     echo "ERROR, a non-zero exit code ($ecode) was received from: trainworker.sh --numiterations $numiterations"
