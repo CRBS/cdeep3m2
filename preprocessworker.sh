@@ -44,7 +44,7 @@ optional arguments:
     exit 1;
 }
 
-TEMP=$(getopt -o h --long "help,maxpackages:,waitinterval:" -n "$0" -- "$@")`
+TEMP=$(getopt -o h --long "help,maxpackages:,waitinterval:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
