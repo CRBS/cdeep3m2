@@ -1,15 +1,15 @@
 #!/bin/bash
 
-script_name=`basename $0`
-script_dir=`dirname $0`
-
+script_name=$(basename "$0")
+script_dir=$(dirname "$0")
+# shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
 version="???"
 waitinterval="1"
 
 if [ -f "$script_dir/VERSION" ] ; then
-    version=`cat $script_dir/VERSION`
+    version=$(cat "$script_dir"/VERSION)
 fi
 
 function usage()
@@ -40,7 +40,8 @@ optional arguments:
     exit 1;
 }
 
-TEMP=`getopt -o h --long "help,waitinterval:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h --long "help,waitinterval:" -n "$0" -- "$@")
+
 eval set -- "$TEMP"
 
 while true ; do
@@ -87,14 +88,14 @@ parse_package_processing_info "$package_proc_info"
 
 space_sep_models=$(get_models_as_space_separated_list "$model_list")
 
-for model_name in `echo $space_sep_models` ; do
+for model_name in $(echo "$space_sep_models") ; do
     if [ -f "$out_dir/$model_name/DONE" ] ; then
         echo "Found $out_dir/$model_name/DONE Prediction on model completed. Skipping..."
         continue
     fi 
-    let cntr=1
-    for CUR_PKG in `seq -w 001 $num_pkgs` ; do
-        for CUR_Z in `seq -w 01 $num_zstacks` ; do
+    (( cntr=1 ))
+    for CUR_PKG in $(seq -w 001 "$num_pkgs") ; do
+        for CUR_Z in $(seq -w 01 "$num_zstacks") ; do
             package_name=$(get_package_name "$CUR_PKG" "$CUR_Z")
             Z="$out_dir/augimages/$model_name/$package_name"
             out_pkg="$out_dir/$model_name/$package_name"
@@ -111,7 +112,7 @@ for model_name in `echo $space_sep_models` ; do
             fi
 
             echo "Running StartPostprocessing.py on $out_pkg"
-            /usr/bin/time -p python3 $script_dir/StartPostprocessing.py "$out_pkg"
+            /usr/bin/time -p python3 "$script_dir"/StartPostprocessing.py "$out_pkg"
 	    ecode=$?
             if [ $ecode != 0 ] ; then
                 fatal_error "$out_dir" "ERROR non-zero exit code ($ecode) from running StartPostprocessing.py" 7
@@ -119,16 +120,16 @@ for model_name in `echo $space_sep_models` ; do
             echo "0" > "$out_pkg/DONE"
             echo "Removing $Z"
             /bin/rm -rf "$Z"
-            let cntr+=1
+            (( cntr+=1 ))
         done
     done
-    /usr/bin/time -p python3 $script_dir/Merge_LargeData.py "$out_dir/$model_name"
+    /usr/bin/time -p python3 "$script_dir"/Merge_LargeData.py "$out_dir/$model_name"
     ecode=$?
     if [ $ecode != 0 ] ; then
         fatal_error "$out_dir" "ERROR non-zero exit code ($ecode) from running Merge_LargeData.py" 8
     fi
     echo "Removing Pkg_* folders"
-    /bin/rm -rf $out_dir/$model_name/Pkg_*
+    /bin/rm -rf "$out_dir"/"$model_name"/Pkg_*
 done
 
 echo ""
