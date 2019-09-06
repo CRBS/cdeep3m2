@@ -5,21 +5,21 @@ shutdown() {
     PGID=$(ps -o pgid= $$ | grep -o [0-9]*)
 
     # Kill it in a new new process group
-    setsid kill -- -$PGID
+    setsid kill -- -"$PGID"
     exit 0
 }
 
 trap "shutdown" SIGINT SIGTERM
 
-script_name=`basename $0`
-script_dir=`dirname $0`
+script_name=$(basename "$0")
+script_dir=$(dirname "$0")
 version="???"
 maxpackages="3"
-
+# shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
 if [ -f "$script_dir/VERSION" ] ; then
-    version=`cat $script_dir/VERSION`
+    version=$(cat "$script_dir"/VERSION)
 fi
 
 model_list="1fm,3fm,5fm"
@@ -63,7 +63,7 @@ optional arguments:
     exit 1;
 }
 
-TEMP=`getopt -o h --long "help,models:,augspeed:,maxpackages:,gpu:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h --long "help,models:,augspeed:,maxpackages:,gpu:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
@@ -89,7 +89,7 @@ declare -r out_dir=$3
 
 
 # check aug_speed is a valid value
-if [ "$aug_speed" -eq 1 ] || [ "$aug_speed" -eq 2 ] || [ "$aug_speed" -eq 4 ] || [ $aug_speed -eq 10 ] ; then
+if [ "$aug_speed" -eq 1 ] || [ "$aug_speed" -eq 2 ] || [ "$aug_speed" -eq 4 ] || [ "$aug_speed" -eq 10 ] ; then
     : # the : is a no-op command
 else
     fatal_error "$out_dir" "ERROR, --augspeed must be one of the following values 1, 2, 4, 10" 2
@@ -121,7 +121,7 @@ if [ $ecode != 0 ] ; then
     fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: mkdir -p \"$augimages\"" 3
 fi
 
-python3 $script_dir/DefDataPackages.py "$images" "$augimages"
+python3 "$script_dir"/DefDataPackages.py "$images" "$augimages"
 ecode=$?
 
 if [ $ecode != 0 ] ; then
@@ -168,13 +168,13 @@ models=$model_list
 augspeed=$aug_speed" > "$out_dir/predict.config"
 
 echo "Start up worker to generate packages to process"
-${script_dir}/preprocessworker.sh --maxpackages $maxpackages "$out_dir" >> "$log_dir/preprocess.log" 2>&1 &
+"${script_dir}"/preprocessworker.sh --maxpackages "$maxpackages" "$out_dir" >> "$log_dir/preprocess.log" 2>&1 &
 
 echo "Start up worker to run prediction on packages"
-${script_dir}/predictworker.sh --gpu $gpu "$out_dir" >> "$log_dir/prediction.log" 2>&1 &
+"${script_dir}"/predictworker.sh --gpu "$gpu" "$out_dir" >> "$log_dir/prediction.log" 2>&1 &
 
 echo "Start up worker to run post processing on packages"
-${script_dir}/postprocessworker.sh "$out_dir" >> "$log_dir/postprocess.log" 2>&1 &
+"${script_dir}"/postprocessworker.sh "$out_dir" >> "$log_dir/postprocess.log" 2>&1 &
 
 echo ""
 echo "To see progress run the following command in another window:"
@@ -184,19 +184,19 @@ echo "tail -f $out_dir/logs/*.log"
 wait
 
 
-num_models=$(get_number_of_models $model_list)
+num_models=$(get_number_of_models "$model_list")
 
 resultdir="$out_dir/ensembled"
 
-if [ $num_models -gt 1 ] ; then
-    space_sep_models=$(get_models_as_space_separated_list $model_list)
-    for Y in `echo $space_sep_models` ; do
-        ensemble_args=`echo "$ensemble_args $out_dir/$Y"`
+if [ "$num_models" -gt 1 ] ; then
+    space_sep_models=$(get_models_as_space_separated_list "$model_list")
+    for Y in $(echo "$space_sep_models") ; do
+        ensemble_args=$(echo "$ensemble_args $out_dir/$Y")
     done
 
-    ensemble_args=`echo "$ensemble_args $resultdir"`
+    ensemble_args=$(echo "$ensemble_args $resultdir")
 
-    python3 $script_dir/EnsemblePredictions.py $ensemble_args
+    python3 "$script_dir"/EnsemblePredictions.py "$ensemble_args"
     ecode=$?
     if [ $ecode != 0 ] ; then
         fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: EnsemblePredictions.py $ensemble_args" 12
