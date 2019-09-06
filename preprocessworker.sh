@@ -1,8 +1,8 @@
 #!/bin/bash
 
-script_name=`basename $0`
-script_dir=`dirname $0`
-
+script_name=$(basename "$0")
+script_dir=$(dirname "$0")
+# shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
 version="???"
@@ -44,7 +44,7 @@ optional arguments:
     exit 1;
 }
 
-TEMP=`getopt -o h --long "help,maxpackages:,waitinterval:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h --long "help,maxpackages:,waitinterval:" -n "$0" -- "$@")`
 eval set -- "$TEMP"
 
 while true ; do
@@ -92,11 +92,11 @@ parse_package_processing_info "$package_proc_info"
 
 space_sep_models=$(get_models_as_space_separated_list "$model_list")
 
-for model_name in `echo $space_sep_models` ; do
+for model_name in $(echo "$space_sep_models") ; do
   
-    let cntr=1
-    for CUR_PKG in `seq -w 001 $num_pkgs` ; do
-        for CUR_Z in `seq -w 01 $num_zstacks` ; do
+    (( cntr=1 ))
+    for CUR_PKG in $(seq -w 001 "$num_pkgs") ; do
+        for CUR_Z in $(seq -w 01 "$num_zstacks") ; do
             package_name=$(get_package_name "$CUR_PKG" "$CUR_Z")
             Z="$out_dir/augimages/$model_name/$package_name"
             out_pkg="$out_dir/$model_name/$package_name"
@@ -107,18 +107,18 @@ for model_name in `echo $space_sep_models` ; do
             echo "Preprocessing $package_name in model $model_name"
             augoutfile="$out_dir/augimages/preproc.${model_name}.${package_name}.log"
       
-            /usr/bin/time -p python3 $script_dir/PreprocessPackage.py "$img_dir" "$out_dir/augimages" $CUR_PKG $CUR_Z $model_name $aug_speed 
+            /usr/bin/time -p python3 "$script_dir"/PreprocessPackage.py "$img_dir" "$out_dir/augimages" "$CUR_PKG" "$CUR_Z" "$model_name" "$aug_speed"
             ecode=$?
             if [ $ecode != 0 ] ; then
                 fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) received from PreprocessPackage.py $CUR_PKG $CUR_Z $model_name $aug_speed" 8
             fi
             echo "Waiting for prediction to catch up"
-            res=$(wait_for_prediction_to_catchup "$out_dir/augimages" $maxpackages $waitinterval)
+            res=$(wait_for_prediction_to_catchup "$out_dir/augimages" "$maxpackages" "$waitinterval")
             if [ "$res" == "killed" ] ; then
                 echo "KILL.REQUEST file found. Exiting"
                 exit 1
             fi
-            let cntr+=1
+            (( cntr+=1 ))
         done
     done
 done
