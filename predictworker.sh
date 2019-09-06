@@ -1,15 +1,15 @@
 #!/bin/bash
 
-script_name=`basename $0`
-script_dir=`dirname $0`
-
+script_name=$(basename "$0")
+script_dir=$(dirname "$0")
+# shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
 version="???"
 waitinterval="1"
 
 if [ -f "$script_dir/VERSION" ] ; then
-    version=`cat $script_dir/VERSION`
+    version=$(cat "$script_dir"/VERSION)
 fi
 
 gpu="all"
@@ -43,7 +43,7 @@ optional arguments:
     exit 1;
 }
 
-TEMP=`getopt -o h --long "help,waitinterval:,gpu:" -n '$0' -- "$@"`
+TEMP=$(getopt -o h --long "help,waitinterval:,gpu:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
@@ -92,11 +92,11 @@ parse_package_processing_info "$package_proc_info"
 
 space_sep_models=$(get_models_as_space_separated_list "$model_list")
 
-for model_name in `echo $space_sep_models` ; do
+for model_name in $(echo "$space_sep_models") ; do
   
-    let cntr=1
-    for CUR_PKG in `seq -w 001 $num_pkgs` ; do
-        for CUR_Z in `seq -w 01 $num_zstacks` ; do
+    (( cntr=1 ))
+    for CUR_PKG in $(seq -w 001 "$num_pkgs") ; do
+        for CUR_Z in $(seq -w 01 "$num_zstacks") ; do
             package_name=$(get_package_name "$CUR_PKG" "$CUR_Z")
             Z="$out_dir/augimages/$model_name/$package_name"
             out_pkg="$out_dir/$model_name/$package_name"
@@ -121,12 +121,12 @@ for model_name in `echo $space_sep_models` ; do
                 exit 1
             fi
             echo "Running prediction on $model_name $package_name"
-            /usr/bin/time -p ${script_dir}/caffepredict.sh --gpu $gpu "$trained_model_dir/$model_name/trainedmodel" "$Z" "$out_pkg"
+            /usr/bin/time -p "${script_dir}"/caffepredict.sh --gpu "$gpu" "$trained_model_dir/$model_name/trainedmodel" "$Z" "$out_pkg"
             ecode=$?
             if [ $ecode != 0 ] ; then
                 fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: caffepredict.sh" 4
             fi
-            let cntr+=1
+            (( cntr+=1 ))
         done
     done
 done
