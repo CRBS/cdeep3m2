@@ -19,6 +19,7 @@ shell check:
   stage: Static Analysis
   before_script:
     - shellcheck --version
+    #-export SHELLCHECK_OPTS="-e SC2059 -e SC2034 -e SC1090" #to ignore certain errors
   script:
     - shellcheck *.sh
   tags:
@@ -38,6 +39,8 @@ flake8:
   stage: Static Analysis
   script:
   - flake8 --max-line-length=120 *.py
+  # to ignore errors globally use "flake8 --ignore=E1,E23,W503"
+  #error codes are here https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes
   tags:
   - vm
   
@@ -46,6 +49,7 @@ pylint:
   allow_failure: true
   script:
   - pylint -d C0301 *.py
+  #message codes here http://pylint-messages.wikidot.com/all-codes
   tags:
   - vm
 
@@ -60,5 +64,5 @@ unit_test:
   tags:
   - vm
 
-#most pylint errors can be fixed with 
+#some pylint errors can be fixed with 
 #autopep8 --in-place --aggressive --aggressive filename.py
