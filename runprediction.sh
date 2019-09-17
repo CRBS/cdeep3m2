@@ -196,7 +196,7 @@ if [ "$num_models" -gt 1 ] ; then
 
     ensemble_args=$(echo "$ensemble_args $resultdir")
 
-    python3 "$script_dir"/EnsemblePredictions.py "$ensemble_args"
+    python3 "${script_dir}"/EnsemblePredictions.py ${ensemble_args}
     ecode=$?
     if [ $ecode != 0 ] ; then
         fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: EnsemblePredictions.py $ensemble_args" 12
