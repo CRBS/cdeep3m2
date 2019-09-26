@@ -7,8 +7,8 @@ NCMIR/NBCR, UCSD -- CDeep3M -- Update: 08/2019 @mhaberl
 """
 import sys
 import os
-from joblib import Parallel, delayed
 from multiprocessing import cpu_count
+from joblib import Parallel, delayed
 import cv2
 import numpy as np
 import skimage

@@ -12,13 +12,13 @@ last argument has to be the outputdirectory where the average files will be stor
 import sys
 import os
 import argparse
+from multiprocessing import cpu_count
+from time import time
 import cv2
 from joblib import Parallel, delayed
 # from multiprocessing import Pool, TimeoutError
-from multiprocessing import cpu_count
 import numpy as np
 from PIL import Image
-from time import time
 import skimage
 
 Image.MAX_IMAGE_PIXELS = 10000000000000

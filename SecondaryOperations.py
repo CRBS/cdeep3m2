@@ -4,6 +4,8 @@ Created on Wed Jul 31 15:30:30 2019
 @author: jihyeonje
 """
 
+import random
+from random import uniform
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from PIL import Image, ImageEnhance
@@ -15,8 +17,6 @@ from skimage.restoration import (
 from scipy.ndimage.interpolation import map_coordinates
 from scipy.interpolate import interp1d
 from check_img_dims import check_img_dims
-import random
-from random import uniform
 
 
 def HighContrast(images, factor):
