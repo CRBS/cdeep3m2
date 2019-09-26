@@ -48,7 +48,7 @@ pylint:
   stage: Static Analysis
   allow_failure: true
   script:
-  - pylint -d C0103,C0301,C0114 *.py
+  - pylint -d C0103,C0301,C0114,C0116,R0914,R0914,R0801,R0915,R0914,R0913 *.py
   #message codes here http://pylint-messages.wikidot.com/all-codes
   tags:
   - vm
