@@ -11,14 +11,15 @@
 #
 import os
 import sys
+import h5py
+import numpy as np
 from imageimporter import imageimporter
 from checkpoint_nobinary import checkpoint_nobinary
 from check_img_dims import check_img_dims
 from augment_data import augment_data, addtl_augs, third_augs
 from checkpoint_isbinary import checkpoint_isbinary
 from dim_convert import dim_convert
-import h5py
-import numpy as np
+
 
 
 def main():
@@ -176,7 +177,7 @@ def main():
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)
     print('For training your model please run runtraining.sh ',
-         outdir, '<desired output directory>\n')
+          outdir, '<desired output directory>\n')
 
 
 if __name__ == "__main__":
