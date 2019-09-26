@@ -25,30 +25,30 @@ shell check:
   tags:
   - vm 
 
-mypy:
-  stage: Static Analysis
-  script:
-  - pwd
-  - ls -l
-  - MYPATH=/usr/local/lib/python3.6/site-packages
-  - python -m mypy *.py
-  tags:
-  - vm
+#mypy:
+#  stage: Static Analysis
+#  script:
+#  - pwd
+#  - ls -l
+#  - MYPATH=/usr/local/lib/python3.6/site-packages
+#  - python -m mypy *.py
+#  tags:
+#  - vm
 
-flake8:
-  stage: Static Analysis
-  script:
-  - flake8 --max-line-length=120 *.py
+#flake8:
+#  stage: Static Analysis
+#  script:
+#  - flake8 --max-line-length=120 *.py
   # to ignore errors globally use "flake8 --ignore=E1,E23,W503"
   #error codes are here https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes
-  tags:
-  - vm
+#  tags:
+#  - vm
   
 pylint:
   stage: Static Analysis
   allow_failure: true
   script:
-  - pylint -d C0301 *.py
+  - pylint -d C0103,C0301,C0114 *.py
   #message codes here http://pylint-messages.wikidot.com/all-codes
   tags:
   - vm
