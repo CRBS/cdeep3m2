@@ -16,7 +16,7 @@ from merge_16_probs_v3 import merge_16_probs_v3
 if len(sys.argv) < 2:
     print('Please specify at least 1 input directory')
     print('Use -> StartPostprocessing /example/seg1/predict/ /example/seg2/predict/')
-    exit()
+    sys.exit()
 
 tic = time.time()
 
@@ -28,7 +28,7 @@ for i in range(1, len(sys.argv)):
 
     if not os.path.isdir(inputdir):
         raise Exception('%s not a input directory' % (inputdir))
-        exit()
+        sys.exit()
 
     print('Generating Average Prediction of %s\n' % (inputdir))
     average_prob_folder = merge_16_probs_v3(inputdir)

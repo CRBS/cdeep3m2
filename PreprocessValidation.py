@@ -30,7 +30,7 @@ arg_list = sys.argv[1:]
 
 if len(arg_list) < 3:
     print('Use -> python PreprocessValidation.py /validation/images/ /validation/labels/ /validdation/combined')
-    exit()
+    sys.exit()
 
 tic = time.time()
 

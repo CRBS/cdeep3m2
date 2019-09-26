@@ -22,7 +22,7 @@ tic = time.time()
 if len(sys.argv) < 3:
     print('Please specify more than one input directory to average: ')
     print('EnsemblePredictions ./inputdir1 ./inputdir2 ./inputdir3 ./outputdir\n')
-    exit()
+    sys.exit()
 
 png_list = [None] * (len(sys.argv) - 2)
 for i in range(1, len(sys.argv) - 1):
@@ -30,7 +30,7 @@ for i in range(1, len(sys.argv) - 1):
         print(
             '%s not a directory\nPlease check if predictions ran successfully or ensure to use: EnsemblePredictions ./inputdir1 ./inputdir2 ./inputdir3 ./outputdir\n' %
             (sys.argv[i]))
-        exit()
+        sys.exit()
     png_list[i -
              1] = [f for f in read_files_in_folder(sys.argv[i])[0] if f.endswith('.png')]
 
