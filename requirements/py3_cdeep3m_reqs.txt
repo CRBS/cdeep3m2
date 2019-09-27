@@ -20,8 +20,6 @@ ptyprocess==0.6.0
 pycurl==7.43.0
 Pygments==2.4.2
 pyparsing==2.4.2
-python-gflags==3.1.2
-python-systemd==231
 PyYAML==5.1.2
 requests==2.22.0
 scikit-image==0.15.0
