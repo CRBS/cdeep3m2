@@ -25,7 +25,7 @@ Read_files_in_folder
     fileList = [file_name for file_name in os.listdir(input_directory)
                 if not os.path.isdir(file_name) and not file_name.startswith('.')]
 
-    if(sys.platform.startswith("win")):
+    if sys.platform.startswith("win"):
         fileList = [
             file_name for file_name in fileList if not bool(
                 os.stat(
