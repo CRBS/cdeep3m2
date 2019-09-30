@@ -49,7 +49,7 @@ fi
 #runprediction.sh --gpu=$gpu_to_use $working_folder/sbem/mitochrondria/xy5.9nm40nmz/30000iterations_train_out $working_folder/mito_testsample/testset/ $working_folder/predictout30k
 echo "Starting prediction run...."
 
-if [ ! -z $gpu_to_use ]; then
+if [ ! -z "$gpu_to_use" ]; then
   runprediction.sh --gpu=$gpu_to_use $sbem_folder/mitochrondria/xy5.9nm40nmz/30000iterations_train_out $sample_folder/testset/ $output_folder
 else
   runprediction.sh $sbem_folder/mitochrondria/xy5.9nm40nmz/30000iterations_train_out $sample_folder/testset/ $output_folder
