@@ -11,15 +11,15 @@
 #
 import os
 import sys
-import h5py
-import numpy as np
 from imageimporter import imageimporter
 from checkpoint_nobinary import checkpoint_nobinary
 from check_img_dims import check_img_dims
+from config_export import writecfg
 from augment_data import augment_data, addtl_augs, third_augs
 from checkpoint_isbinary import checkpoint_isbinary
 from dim_convert import dim_convert
-
+import h5py
+import numpy as np
 
 
 def main():
@@ -134,8 +134,9 @@ def main():
             inv_img_n = np.flip(img, 0).astype(np.uint8)  # augmentations 9-16
             inv_lb_n = np.flip(lb, 0).astype(np.uint8)  # augmentations 9-16
             del img, lb
-            img_result, lb_result = addtl_augs(
+            img_result, lb_result, addtl_choices = addtl_augs(
                 strength, img_n, lb_n, i)  # apply secondary augmentations
+            
             del img_n, lb_n
             img_result_r, lb_result_r = third_augs(
                 third_str, img_result, lb_result, i)  # apply tertiary augmentations
@@ -154,9 +155,9 @@ def main():
             del lb_result, lb_result_r, lb_result_f
 
             # v9-16
-            inv_img_result, inv_lb_result = addtl_augs(
+            inv_img_result, inv_lb_result, inv_addtl_choices = addtl_augs(
                 strength, inv_img_n, inv_lb_n, i + 8)
-            del inv_img_n, inv_lb_n
+            del inv_img_n, inv_lb_n, inv_addtl_choices
             inv_img_result_r, inv_lb_result_r = third_augs(
                 third_str, inv_img_result, inv_lb_result, i + 8)
             inv_img_result_f = inv_img_result_r.astype('float32')
@@ -173,11 +174,14 @@ def main():
             hdf5_file.close()
             del inv_img_result, inv_img_result_r, inv_img_result_f
             del inv_lb_result, inv_lb_result_r, inv_lb_result_f
-
+    
+        writecfg(outdir, j+1, addtl_choices, strength, third_str)
+        print('Saving: ', filename)
+    
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)
     print('For training your model please run runtraining.sh ',
-          outdir, '<desired output directory>\n')
+         outdir, '<desired output directory>\n')
 
 
 if __name__ == "__main__":
