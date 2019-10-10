@@ -28,10 +28,10 @@ cd $working_folder
 
 if [ ! -d "$sbem_folder" ]; then
   echo "Getting trained model....."
-  wget https://s3-us-west-2.amazonaws.com/cdeep3m-trainedmodels/sbem/mitochrondria/xy5.9nm40nmz/sbem_mitochrondria_xy5.9nm40nmz.tar.gz
+  wget https://s3-us-west-2.amazonaws.com/cdeep3m-trainedmodels-s3/sbem/mitochrondria/xy5.9nm40nmz/sbem_mitochrondria_xy5.9nm40nmz.tar.gz
   tar -xvf sbem_mitochrondria_xy5.9nm40nmz.tar.gz
   rm -f sbem_mitochrondria_xy5.9nm40nmz.tar.gz
-  wget https://s3-us-west-2.amazonaws.com/cdeep3m-trainedmodels/sbem/mitochrondria/xy5.9nm40nmz/sbem_mitochrondria_xy5.9nm40nmz_30000iter_trainedmodel.tar.gz
+  wget https://s3-us-west-2.amazonaws.com/cdeep3m-trainedmodels-s3/sbem/mitochrondria/xy5.9nm40nmz/sbem_mitochrondria_xy5.9nm40nmz_30000iter_trainedmodel.tar.gz
   tar -xvf sbem_mitochrondria_xy5.9nm40nmz_30000iter_trainedmodel.tar.gz
   rm -f sbem_mitochrondria_xy5.9nm40nmz_30000iter_trainedmodel.tar.gz
 fi
