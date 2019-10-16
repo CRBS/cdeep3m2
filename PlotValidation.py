@@ -6,6 +6,8 @@
 import sys
 import os
 import csv
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
@@ -21,7 +23,7 @@ else :
 		print("Parsing log file")
 		train_file = os.path.join(logdir, "out.log.train")
 		test_file = os.path.join(logdir, "out.log.test")
-		os.system("python3 parse_log.py {0} {1}".format(os.path.join(logdir, "out.log"), logdir))
+		os.system("python2 $CAFFE_PATH/tools/extra/parse_log.py {0} {1}".format(os.path.join(logdir, "out.log"), logdir))
 	else:
 		print("Invalid argument")
 		exit()
