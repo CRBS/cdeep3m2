@@ -11,6 +11,8 @@
 #
 import os
 import sys
+import h5py
+import numpy as np
 from imageimporter import imageimporter
 from checkpoint_nobinary import checkpoint_nobinary
 from check_img_dims import check_img_dims
@@ -18,9 +20,6 @@ from config_export import writecfg
 from augment_data import augment_data, addtl_augs, third_augs
 from checkpoint_isbinary import checkpoint_isbinary
 from dim_convert import dim_convert
-import h5py
-import numpy as np
-
 
 def main():
     print('Starting Training Data Preprocessing')
@@ -136,7 +135,7 @@ def main():
             del img, lb
             img_result, lb_result, addtl_choices = addtl_augs(
                 strength, img_n, lb_n, i)  # apply secondary augmentations
-            
+
             del img_n, lb_n
             img_result_r, lb_result_r = third_augs(
                 third_str, img_result, lb_result, i)  # apply tertiary augmentations
@@ -174,14 +173,14 @@ def main():
             hdf5_file.close()
             del inv_img_result, inv_img_result_r, inv_img_result_f
             del inv_lb_result, inv_lb_result_r, inv_lb_result_f
-    
+
         writecfg(outdir, j+1, addtl_choices, strength, third_str)
         print('Saving: ', filename)
-    
+
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)
     print('For training your model please run runtraining.sh ',
-         outdir, '<desired output directory>\n')
+          outdir, '<desired output directory>\n')
 
 
 if __name__ == "__main__":
