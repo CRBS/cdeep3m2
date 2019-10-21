@@ -7,36 +7,36 @@ import sys
 import os
 import csv
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
 import pandas as pd
+matplotlib.use('Agg')
 
 # takes in log file folder path as argument
 if len(sys.argv) != 2:
-	print("Syntax:\n python3 PlotValidation.py ~/trainingdata/1fm/log\n")
-	exit()
-else :
-	logdir = sys.argv[1]
-	if os.path.isdir(logdir):
-		print("Parsing log file")
-		train_file = os.path.join(logdir, "out.log.train")
-		test_file = os.path.join(logdir, "out.log.test")
-		os.system("python2 $CAFFE_PATH/tools/extra/parse_log.py {0} {1}".format(os.path.join(logdir, "out.log"), logdir))
-	else:
-		print("Invalid argument")
-		exit()
+    print("Syntax:\n python3 PlotValidation.py ~/trainingdata/1fm/log\n")
+    sys.exit()
+else:
+    logdir = sys.argv[1]
+    if os.path.isdir(logdir):
+        print("Parsing log file")
+        train_file = os.path.join(logdir, "out.log.train")
+        test_file = os.path.join(logdir, "out.log.test")
+        os.system("python2 $CAFFE_PATH/tools/extra/parse_log.py {0} {1}".format(os.path.join(logdir, "out.log"), logdir))
+    else:
+        print("Invalid argument")
+        sys.exit()
 
 # gets files paths for training log and testing log files
 # column format for train_output csv (NumIters,Seconds,LearningRate,loss_deconv_all)
 print("Reading CSV files")
-train_df=pd.read_csv(train_file, sep=',',header=0)
+train_df = pd.read_csv(train_file, sep=',', header=0)
 train_df['NumIters'] = train_df['NumIters'].astype(int)
 train_df['loss_deconv_all'] = train_df['loss_deconv_all'].astype(float)
 
 # column format for test_output csv (NumIters,Seconds,LearningRate,accuracy_conv,class_Acc,loss_deconv_all)
-test_df=pd.read_csv(test_file, sep=',',header=0)
+test_df = pd.read_csv(test_file, sep=',', header=0)
 test_df['NumIters'] = test_df['NumIters'].astype(int)
 test_df['loss_deconv_all'] = test_df['loss_deconv_all'].astype(float)
 
