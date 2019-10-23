@@ -46,7 +46,7 @@ if __name__ == "__main__":
    main(sys.argv[1:])
 
 """
-
+sys.stdout.write('Starting image enhancement \n')
 print(sys.argv)
 inputfolder = sys.argv[1]
 outputfolder = sys.argv[2]
@@ -59,17 +59,18 @@ def processInput(x):
     sys.stdout.write('Loading: ' + str(file_in) + '\n')
     img = skimage.io.imread(file_in)
     sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))    
-    print(file_in + ": Estimated Gaussian noise standard deviation = {}".format(sigma_est))
+    print(file_in + ": Estimated Gaussian noise standard deviation before denoising = {}".format(sigma_est))
     #img = skimage.filters.gaussian(img, sigma=1, output=None, mode='nearest', cval=0, multichannel=None, preserve_range=False, truncate=4.0)
     img = skimage.restoration.denoise_tv_chambolle(img, weight=sigma_est, multichannel=False)
-    #img = skimage.restoration.denoise_tv_bregman(img, weight=0.2, max_iter=100, eps=0.001, isotropic=True);    
-    img = skimage.exposure.rescale_intensity(img)
+    #img = skimage.restoration.denoise_tv_bregman(img, weight=0.2, max_iter=100, eps=0.001, isotropic=True);
+    img = skimage.exposure.rescale_intensity(img, in_range=(np.percentile(img, 1), np.percentile(img, 99)), out_range=(0, 1))
     file_out = os.path.join(outputfolder, file_list[x])
     sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))    
-    print(file_out + ": Estimated Gaussian noise standard deviation = {}".format(sigma_est))
+    print(file_out + ": Estimated Gaussian noise standard deviation after denoising = {}".format(sigma_est))
     sys.stdout.write('Saving: ' + str(file_out) + '\n')   
-    skimage.io.imsave(file_out, img)
+    skimage.io.imsave(file_out, skimage.img_as_ubyte(img))
 
 p_tasks = 5
 sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
 results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list)))
+sys.stdout.write('Finished image enhancement \n')
