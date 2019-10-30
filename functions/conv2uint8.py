@@ -2,30 +2,30 @@
 # -*- coding: utf-8 -*-
 """
 
-# conv2uint8 rescales image contrast 
+# conv2uint8 rescales image contrast
 # performs image measurements of noise levels and automated enhancements
 #
 # Syntax: conv2uint8.py inputfolder outputfolder
 # optional: conv2uint8.py inputfolder outputfolder 3
-# 
+#
 # Input: images inside inputfolder, signed or unsigned
 # optional input: single number, to define lower and upper percentile of greyvalues to clip
 #
 # Processing: rescales to positive values, crops lower and higher percentile (standard: 5% and 95%)
 # Output: images, inside outputfolder, filenames match images in inputfolder
-# 
+#
 #----------------------------------------------------------------------------
 ## CDeep3M -- NCMIR, UCSD -- Author: M Haberl -- Date: 10/2019
 #-----------------------------------------------------------------------------
 
 """
 
-import sys, getopt
+import sys
 import os
 import numpy as np
 import skimage
-from read_files_in_folder import read_files_in_folder
 from joblib import Parallel, delayed
+from read_files_in_folder import read_files_in_folder
 
 
 print(sys.argv)
