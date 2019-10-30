@@ -28,7 +28,7 @@ print('Starting to merge large image dataset')
 
 if len(sys.argv) == 1:
     print('Use -> Merge_LargeData ~/prediction/1fm')
-    exit()
+    sys.exit()
 else:
     fm_dir = sys.argv[1]
 

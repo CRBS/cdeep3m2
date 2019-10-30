@@ -47,7 +47,7 @@ def processInput(x):
     image = skimage.exposure.rescale_intensity(img_float64, in_range=(np.percentile(img_float64, cutperc), np.percentile(img_float64, 100-cutperc)), out_range=(0, 1))
     img_uint8 = skimage.img_as_ubyte(image)
     file_out = os.path.join(outputfolder, file_list[x])
-    sys.stdout.write('Saving: ' + str(file_out) + '\n')   
+    sys.stdout.write('Saving: ' + str(file_out) + '\n')
     skimage.io.imsave(file_out, img_uint8)
 
 p_tasks = 5

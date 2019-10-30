@@ -7,8 +7,8 @@
 ## CDeep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 05/2019
 #-----------------------------------------------------------------------------
 
-import sys 
-import getopt
+import sys
+#import getopt
 import os
 #import h5py
 #from PIL import Image
@@ -60,14 +60,14 @@ def processInput(x):
     file_in = os.path.join(inputfolder, file_list[x])
     sys.stdout.write('Loading: ' + str(file_in) + '\n')
     img = skimage.io.imread(file_in)
-    sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))  
+    sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))
     print(file_in + ": Estimated Gaussian noise standard deviation = {}".format(sigma_est))
     #img = skimage.filters.gaussian(img, sigma=1, output=None, mode='nearest', cval=0, multichannel=None, preserve_range=False, truncate=4.0)
     img = skimage.restoration.denoise_tv_chambolle(img, weight=sigma_est, multichannel=False)
-    #img = skimage.restoration.denoise_tv_bregman(img, weight=0.2, max_iter=100, eps=0.001, isotropic=True);  
+    #img = skimage.restoration.denoise_tv_bregman(img, weight=0.2, max_iter=100, eps=0.001, isotropic=True);
     img = skimage.exposure.rescale_intensity(img)
     file_out = os.path.join(outputfolder, file_list[x])
-    sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))  
+    sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))
     print(file_out + ": Estimated Gaussian noise standard deviation = {}".format(sigma_est))
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     skimage.io.imsave(file_out, img)
