@@ -50,8 +50,8 @@ plt.yscale('log')
 plt.grid(True)
 plt.legend()
 plt.savefig(os.path.join(logdir, "loss.pdf"), bbox_inches='tight')
-plt.show()
-
+#plt.show()
+plt.close('all')
 
 # plots accuracy and saves as a pdf
 plt.plot(test_df['NumIters'], test_df['accuracy_conv'], label='Validation Accuracy', linewidth=1)
@@ -60,4 +60,5 @@ plt.ylabel('Loss')
 plt.title('Validation Accuracy')
 plt.grid(True)
 plt.savefig(os.path.join(logdir, "accuracy.pdf"), bbox_inches='tight')
-plt.show()
+#plt.show()
+plt.close('all')
