@@ -13,7 +13,9 @@ before_script:
 stages:
   - Static Analysis
   - Test
-  
+variables:
+  GIT_SSL_NO_VERIFY: "true"
+
 shell check:
   image: koalaman/shellcheck-alpine
   stage: Static Analysis
