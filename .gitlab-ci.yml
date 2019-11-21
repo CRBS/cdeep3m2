@@ -1,70 +1,15 @@
-#see http://www.patricksoftwareblog.com/setting-up-gitlab-ci-for-a-python-application/
-image: "python:3.6"
-
-before_script:
-  - python --version
-  - pip3 install --upgrade pip
-  - pip3 install -r requirements/pip3.txt
-  - pip3 install mypy
-  - pip3 install flake8
-  - pip3 install pylint
-  - pip3 install pytest
-
 stages:
   - Static Analysis
   - Test
-variables:
-  GIT_SSL_NO_VERIFY: "true"
 
-shell check:
-  image: koalaman/shellcheck-alpine
-  stage: Static Analysis
-  before_script:
-    - shellcheck --version
-    #-export SHELLCHECK_OPTS="-e SC2059 -e SC2034 -e SC1090" #to ignore certain errors
-  script:
-    - shellcheck *.sh
-  tags:
-  - vm 
-
-#mypy:
-#  stage: Static Analysis
-#  script:
-#  - pwd
-#  - ls -l
-#  - MYPATH=/usr/local/lib/python3.6/site-packages
-#  - python -m mypy *.py
-#  tags:
-#  - vm
-
-#flake8:
-#  stage: Static Analysis
-#  script:
-#  - flake8 --max-line-length=120 *.py
-  # to ignore errors globally use "flake8 --ignore=E1,E23,W503"
-  #error codes are here https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes
-#  tags:
-#  - vm
-  
-pylint:
-  stage: Static Analysis
-  allow_failure: true
-  script:
-  - pylint -d C0103,C0301,C0114,C0116,R0914,R0914,R0801,R0915,R0914,R0913 *.py functions/*.py
-  #message codes here http://pylint-messages.wikidot.com/all-codes
-  tags:
-  - vm
-
-unit_test:
-  stage: Test
-  script:
-  - pwd
-  - ls -l
-  - export PYTHONPATH="$PYTHONPATH:."
-  - python -c "import sys;print(sys.path)"
-  - pytest
-  tags:
-  - vm
-
-#some pylint errors can be fixed with 
-#autopep8 --in-place --aggressive --aggressive filename.py
+include:
+  - project: 'ncmir/buildchain'
+    ref: master
+    file: 'cdeep3m/code-quality.gitlab-ci-template.yml'
+    tags:
+      - vm
+  - project: 'ncmir/buildchain'
+    ref: master
+    file: 'cdeep3m/test.gitlab-ci-template.yml'
+    tags:
+      - vm
