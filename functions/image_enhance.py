@@ -37,6 +37,11 @@ def processInput(x):
     sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
     img = skimage.io.imread(file_in)
     sys.stdout.write('Type: ' + str(img.dtype) + '\n')
+    print(str(img.shape) + '\n')
+    # Check 3rd dimension here, if loaded as RGB, remove 3rd dimension here
+    if len(img.shape) > 2:
+        print('Converting RGB  to grey level image')
+        img = img[:,:,0]
     img_float64 = skimage.img_as_float64(img)
     # remove extreme outlier pixels before denoising
     #if img.dtype~=uint8
