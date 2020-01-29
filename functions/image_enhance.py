@@ -12,13 +12,12 @@
 
 import sys
 import os
-#import h5py
-#from PIL import Image
 import numpy as np
 import skimage
 from joblib import Parallel, delayed
-from read_files_in_folder import read_files_in_folder
 import cv2
+from read_files_in_folder import read_files_in_folder
+
 
 
 print(sys.argv)
@@ -41,7 +40,7 @@ def processInput(x):
     # Check 3rd dimension here, if loaded as RGB, remove 3rd dimension here
     if len(img.shape) > 2:
         print('Converting RGB  to grey level image')
-        img = img[:,:,0]
+        img = img[:, :, 0]
     img = skimage.img_as_float64(img)
     # remove extreme outlier pixels before denoising
     #if img.dtype~=uint8
