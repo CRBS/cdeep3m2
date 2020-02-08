@@ -1,7 +1,10 @@
 """
-Created on Wed Jul 31 15:30:30 2019
+Secondary augmentation operations for CDeep3M
 
-@author: jihyeonje
+NCMIR, UCSD -- CDeep3M
+
+        Jul 2019 @jihyeonje
+Update: Feb 2020 @mhaberl
 """
 
 import random
@@ -307,6 +310,10 @@ def Resize(images, labels, scale, dir):
 
 def binarize(labels):
     binarized_labels = np.asarray(labels)
-    binarized_labels[binarized_labels > 128] = 255
-    binarized_labels[binarized_labels <= 128] = 0
+    if np.max(binarized_labels) > 1:
+        binarized_labels[binarized_labels > 128] = 255
+        binarized_labels[binarized_labels <= 128] = 0
+    elif np.max(binarized_labels) == 1:
+        binarized_labels[binarized_labels > 0.5] = 1
+        binarized_labels[binarized_labels <= 0.5] = 0
     return binarized_labels
