@@ -13,8 +13,11 @@
 import os
 import sys
 import time
+from multiprocessing import cpu_count
+from joblib import Parallel, delayed
 import numpy as np
 import skimage
+import cv2
 from read_files_in_folder import read_files_in_folder
 
 tic = time.time()
@@ -41,19 +44,22 @@ os.mkdir(outputdir)
 
 total_zplanes = len(png_list[0])
 
-for z in range(0, total_zplanes):
-    image_list = [skimage.io.imread(os.path.join(sys.argv[proc + 1], png_list[proc][z]))
+def ensembleImgs(z):
+    prob_maps = [cv2.imread(os.path.join(sys.argv[proc + 1], png_list[proc][z]), -1)
                   for proc in range(0, len(png_list))]  # Cumulate all average predictions of this plane
+    ens_map = np.uint8(np.round(np.mean(prob_maps, 0)))
 
-    prob_map = np.uint8(np.round(np.mean(image_list, 0)))
-
-    save_file_save = os.path.join(outputdir, png_list[0][z])
+    save_filename = os.path.join(outputdir, png_list[0][z])
     print('Saving Image # %d of %d: %s\n' %
-          (z + 1, total_zplanes, save_file_save))
-    try:
-        skimage.io.imsave(save_file_save, prob_map, as_grey=True)
-    except BaseException:
-        skimage.io.imsave(save_file_save, prob_map)
+          (z + 1, total_zplanes, save_filename))
+    cv2.imwrite(save_filename, ens_map)
+    #try:
+    #    skimage.io.imsave(save_filename, prob_map, as_grey=True)
+    #except BaseException:
+    #    skimage.io.imsave(save_filename, prob_map)
+p_tasks = max(1, int(cpu_count() - 2))
+Parallel(n_jobs=p_tasks)(delayed(ensembleImgs)(z)
+                             for z in range(0, total_zplanes))
 
 print('Elapsed time for merging predictions is %06d seconds.\n' %
       (np.round(time.time() - tic)))
