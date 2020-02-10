@@ -22,69 +22,13 @@ import time
 import json
 import numpy as np
 import skimage
+import skimage.io
 from read_files_in_folder import read_files_in_folder
-
-print('Starting to merge large image dataset')
-
-if len(sys.argv) == 1:
-    print('Use -> Merge_LargeData ~/prediction/1fm')
-    sys.exit()
-else:
-    fm_dir = sys.argv[1]
+from multiprocessing import cpu_count
+from joblib import Parallel, delayed
 
 
-tic = time.time()
-
-path_separator = os.path.join(fm_dir, '')[-1]
-
-if fm_dir[-1] == path_separator:  # fixing special case which can cause error
-    fm_dir = fm_dir[:-1]
-
-parent_dir = path_separator.join(fm_dir.split(path_separator)[:-1])
-de_aug_file = os.path.join(parent_dir, 'de_augmentation_info.json')
-print('Processing:', de_aug_file)
-
-with open(de_aug_file, 'r') as json_file:
-    json_file_contents = json.load(json_file)
-
-packages = json_file_contents['packages']
-num_of_pkg = json_file_contents['num_of_pkg']
-imagesize = json_file_contents['imagesize']
-# zplanes = json_file_contents['zplanes']
-z_blocks = json_file_contents['z_blocks']
-
-# Merge Z-sections
-# first combine images from the same x/y areas through all z-planes
-print('Combining image stacks')
-for x_y_num in range(1, len(packages) + 1):
-    imcounter = 0  # Reset imagecounter to combine next Package
-    combined_folder = os.path.join(fm_dir, "Pkg_%03d" % (x_y_num))
-    os.mkdir(combined_folder)
-    for z_plane in range(1, len(z_blocks)):
-        in_folder = os.path.join(fm_dir, 'Pkg%03d_Z%02d' % (x_y_num, z_plane))
-        print('Reading:', in_folder)
-        imlist = read_files_in_folder(in_folder)[0]
-        imlist = [
-            file_name for file_name in imlist if file_name.endswith('.png')]
-        for filenum in range(0, len(imlist)):
-            imcounter = imcounter + 1
-            in_filename = os.path.join(in_folder, imlist[filenum])
-            out_filename = os.path.join(
-                combined_folder,
-                'segmentation_%04d.png' %
-                (imcounter))
-            os.rename(in_filename, out_filename)
-
-z_found = len([file_name for file_name in read_files_in_folder(
-    os.path.join(fm_dir, 'Pkg_001'))[0] if file_name.endswith('.png')])
-print('Expected number of planes: %s ... Found: %s planes\n' %
-      (str(z_blocks[-1]), str(z_found)))
-# Now stitch individual sections
-combined_folder = os.path.join(
-    fm_dir, 'Pkg_%03d' %
-    (1))  # read in the filenames of the first Pkg
-filelist = read_files_in_folder(combined_folder)[0]
-for z_plane in range(0, z_found):  # one z-plane at a time
+def merge_images(z_plane):
     print('Merging image no. %s\n' % (str(z_plane)))
 
     # Initialize empty image in x/y 2 in  z
@@ -152,6 +96,73 @@ for z_plane in range(0, z_found):  # one z-plane at a time
         skimage.io.imsave(outfile, save_plane, as_grey=True)
     except BaseException:
         skimage.io.imsave(outfile, save_plane)
+        
+
+print('Starting to merge large image dataset')
+
+if len(sys.argv) == 1:
+    print('Use -> Merge_LargeData ~/prediction/1fm')
+    exit()
+else:
+    fm_dir = sys.argv[1]
+
+
+tic = time.time()
+
+path_separator = os.path.join(fm_dir, '')[-1]
+
+if fm_dir[-1] == path_separator:  # fixing special case which can cause error
+    fm_dir = fm_dir[:-1]
+
+parent_dir = path_separator.join(fm_dir.split(path_separator)[:-1])
+de_aug_file = os.path.join(parent_dir, 'de_augmentation_info.json')
+print('Processing:', de_aug_file)
+
+with open(de_aug_file, 'r') as json_file:
+    json_file_contents = json.load(json_file)
+
+packages = json_file_contents['packages']
+num_of_pkg = json_file_contents['num_of_pkg']
+imagesize = json_file_contents['imagesize']
+# zplanes = json_file_contents['zplanes']
+z_blocks = json_file_contents['z_blocks']
+
+# Merge Z-sections
+# first combine images from the same x/y areas through all z-planes
+print('Combining image stacks')
+for x_y_num in range(1, len(packages) + 1):
+    imcounter = 0  # Reset imagecounter to combine next Package
+    combined_folder = os.path.join(fm_dir, "Pkg_%03d" % (x_y_num))
+    os.mkdir(combined_folder)
+    for z_plane in range(1, len(z_blocks)):
+        in_folder = os.path.join(fm_dir, 'Pkg%03d_Z%02d' % (x_y_num, z_plane))
+        print('Reading:', in_folder)
+        imlist = read_files_in_folder(in_folder)[0]
+        imlist = [
+            file_name for file_name in imlist if file_name.endswith('.png')]
+        for filenum in range(0, len(imlist)):
+            imcounter = imcounter + 1
+            in_filename = os.path.join(in_folder, imlist[filenum])
+            out_filename = os.path.join(
+                combined_folder,
+                'segmentation_%04d.png' %
+                (imcounter))
+            os.rename(in_filename, out_filename)
+
+z_found = len([file_name for file_name in read_files_in_folder(
+    os.path.join(fm_dir, 'Pkg_001'))[0] if file_name.endswith('.png')])
+print('Expected number of planes: %s ... Found: %s planes\n' %
+      (str(z_blocks[-1]), str(z_found)))
+# Now stitch individual sections
+combined_folder = os.path.join(
+    fm_dir, 'Pkg_%03d' %
+    (1))  # read in the filenames of the first Pkg
+filelist = read_files_in_folder(combined_folder)[0]
+p_tasks = max(1, min(z_found - 1, int(cpu_count()/2)))
+print('Running' + str(p_tasks) + 'parallel tasks')
+Parallel(n_jobs=p_tasks)(delayed(merge_images)(z_plane)
+                        for z_plane in range(0, z_found))  # one z-plane at a time
+
 
 print('Merging large image dataset completed')
 print("Total time = ", time.time() - tic)
