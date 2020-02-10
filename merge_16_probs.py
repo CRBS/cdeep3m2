@@ -1,13 +1,13 @@
 import os
-# import sys
 import shutil
 import h5py
 import numpy as np
 import skimage
+import skimage.io
 from read_files_in_folder import read_files_in_folder
 
 
-def merge_16_probs_v3(folder):
+def merge_16_probs(folder):
 
     # get variation directories aka directories that start with v
     vfolderlist = [
@@ -100,12 +100,12 @@ def merge_16_probs_v3(folder):
         # print('Dim2:', np.shape(image))
         # if np.shape(image)[0]>1:
         image = np.mean(image, 0)
-
+        # image2 = mode(sixteen_vars,3) #mode weighting vs mean 
         # image_stack=de_augment_data(b);
         output_filename = os.path.join(
             folder, '%s_%04d.png' %
             (filebasename, (fff - 2)))
-        # delete(filename);
+
         print('write: ', output_filename)
         try:
             skimage.io.imsave(
@@ -114,31 +114,6 @@ def merge_16_probs_v3(folder):
                 as_grey=True)
         except BaseException:
             skimage.io.imsave(output_filename, skimage.img_as_ubyte(image))
-        # tiff_file_save=[folder filesep 'ave_16.tiff'];
-
-        # tried different weighting of 16v predictions, using mode instead of average ->
-        # need to test if better but currently slow
-        # {
-        # image2 = mode(sixteen_vars,3)
-        # outdir2=os.path.join(folder, 'de_augmented_mode_weighting')
-        # os.mkdir(outdir2)
-        # output_filename2=os.path.join(outdir2, '%s_%04d.png' %(filebasename, (fff+1)))
-        # delete(filename);
-        # print('write: ', output_filename2)
-        # skimage.io.imsave(output_filename2, image2)
-        # }
-
-    # {
-    # if os.path.isfile(tiff_file_save):
-    #    os.remove(tiff_file_save)
-    # mx_im=np.max(average(:))
-    # for i in range(1, size(average,3)):
-    #    b=average(:,:,i)
-    #    im=uint8(b*(255/mx_im)); %removed 255- inverted image values
-    #    skimage.io.imsave(tiff_file_save, im);
-    #    disp(['write #' num2str(i) '  image ... ' tiff_file_save]);
-    # end
-    # }
 
     print('Deleting intermediate .h5 files')
     for folder_name in vfolderlist:
