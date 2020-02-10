@@ -11,7 +11,7 @@ from multiprocessing import cpu_count
 from joblib import Parallel, delayed
 import cv2
 import numpy as np
-import skimage
+#import skimage
 
 
 def crop_png(
@@ -58,7 +58,7 @@ def crop_png(
         #return
     niceness = os.nice(0)
     os.nice(10 - niceness)
-    p_tasks = max(1, min(6, int(cpu_count() / 2.5)))
+    p_tasks = max(1, min(10, int(cpu_count() / 2.5)))
     # p_tasks = 2
     sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
     Parallel(n_jobs=p_tasks)(delayed(processInput)(i)
