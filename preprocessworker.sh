@@ -6,7 +6,7 @@ script_dir=$(dirname "$0")
 source "${script_dir}/commonfunctions.sh"
 
 version="???"
-maxpackages="5"
+maxpackages="7"
 waitinterval="60"
 
 if [ -f "$script_dir/VERSION" ] ; then
