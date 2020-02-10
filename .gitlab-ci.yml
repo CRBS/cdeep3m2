@@ -1,5 +1,6 @@
 stages:
   - Static Analysis
+  - build_env
   - Test
 
 include:
