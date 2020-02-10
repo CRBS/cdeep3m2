@@ -50,12 +50,12 @@ def crop_png(
         cropped = cropped.astype(np.float64) / info.max
         cropped = 255 * cropped  # Now scale by 255
         cropped = cropped.astype(np.uint8)
-        # cv2.imwrite(outfiles[x], cropped)
-        try:
-            skimage.io.imsave(outfiles[x], cropped, as_grey=True)
-        except BaseException:
-            skimage.io.imsave(outfiles[x], cropped)
-        return
+        cv2.imwrite(outfiles[x], cropped)
+        #try:
+        #    skimage.io.imsave(outfiles[x], cropped, as_grey=True)
+        #except BaseException:
+        #    skimage.io.imsave(outfiles[x], cropped)
+        #return
     niceness = os.nice(0)
     os.nice(10 - niceness)
     p_tasks = max(1, min(6, int(cpu_count() / 2.5)))
