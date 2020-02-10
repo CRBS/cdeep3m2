@@ -14,7 +14,7 @@ trap "shutdown" SIGINT SIGTERM
 script_name=$(basename "$0")
 script_dir=$(dirname "$0")
 version="???"
-maxpackages="3"
+maxpackages="5"
 # shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
