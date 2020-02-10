@@ -159,7 +159,7 @@ combined_folder = os.path.join(
     (1))  # read in the filenames of the first Pkg
 filelist = read_files_in_folder(combined_folder)[0]
 p_tasks = max(1, min(z_found - 1, int(cpu_count()/2)))
-print('Running' + str(p_tasks) + 'parallel tasks')
+print('Running ' + str(p_tasks) + ' parallel tasks\n')
 Parallel(n_jobs=p_tasks)(delayed(merge_images)(z_plane)
                         for z_plane in range(0, z_found))  # one z-plane at a time
 
