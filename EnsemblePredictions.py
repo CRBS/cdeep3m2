@@ -16,7 +16,7 @@ import time
 from multiprocessing import cpu_count
 from joblib import Parallel, delayed
 import numpy as np
-import skimage
+#import skimage
 import cv2
 from read_files_in_folder import read_files_in_folder
 
