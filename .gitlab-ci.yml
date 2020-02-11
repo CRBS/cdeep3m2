@@ -3,7 +3,6 @@ stages:
   - build_env
   - push
   - test
-
 include:
   - project: 'ncmir/buildchain'
     ref: master
