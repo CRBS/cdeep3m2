@@ -8,7 +8,7 @@
 # -----------------------------------------------------------------------------
 import os
 import h5py
-import skimage
+import cv2
 import numpy as np
 from PIL import Image as pilimage
 from read_files_in_folder import read_files_in_folder
@@ -76,8 +76,8 @@ def imageimporter_large(img_path, area, z_stack, outfolder):
                 area[3])
 
             print('Reading images')
-            imgstack = np.array([skimage.io.imread(os.path.join(
-                tempdir, file_list[i][:-3] + 'png'), as_gray=True) for i in range(z_stack[0], z_stack[1])])
+            imgstack = np.array([cv2.imread(os.path.join(
+                tempdir, file_list[i][:-3] + 'png'), -1) for i in range(z_stack[0], z_stack[1])])
             # shape = np.shape(imgstack)
             # print (shape)
 
