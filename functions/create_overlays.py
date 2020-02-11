@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # generates overlays with the original image
 #
-# syntax: python3 create_overlays.py inputfolder outputfolder
+# syntax: python3 create_overlays.py inputfolder_segmentation inputfolder_rawimages outputfolder
 # Inputarguments: inputfolder_segmentation inputfolder_rawimages outputfolder
 # Optional argument: none
 # Output: RGB images saved in outputfolder
@@ -23,20 +23,20 @@ from read_files_in_folder import read_files_in_folder
 
 print(sys.argv)
 inputfolder_seg = sys.argv[1]
-inputfolder_img = sys.argv[2]
+inputfolder_raw = sys.argv[2]
 outputfolder = sys.argv[3]
 
 os.mkdir(outputfolder)
-file_list_raw = read_files_in_folder(inputfolder)[0]
+file_list_raw = read_files_in_folder(inputfolder_raw)[0]
 sys.stdout.write('Processing ' + str(len(file_list_raw)) + ' images \n')
 file_list_seg = read_files_in_folder(inputfolder_seg)[0]
 
 def processInput(x):
-    file_in = os.path.join(inputfolder_seg, file_list_raw[x])
+    file_in = os.path.join(inputfolder_raw, file_list_raw[x])
     sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
     raw_image = cv2.imread(file_in, -1)
     
-    file_in = os.path.join(inputfolder_img, file_list_seg[x])
+    file_in = os.path.join(inputfolder_seg, file_list_seg[x])
     sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
     seg = cv2.imread(file_in, -1)    
     seg = np.uint8(seg)
@@ -57,4 +57,4 @@ def processInput(x):
 
 p_tasks = 5
 sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
-results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list)))
+results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list_raw)))
