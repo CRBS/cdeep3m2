@@ -12,14 +12,17 @@
 
 import sys
 import os
+import time
 import numpy as np
 import skimage.io
 import skimage.exposure
 import skimage
+from multiprocessing import cpu_count
 from joblib import Parallel, delayed
 import cv2
 from read_files_in_folder import read_files_in_folder
 
+tic = time.time()
 
 print(sys.argv)
 inputfolder_seg = sys.argv[1]
@@ -30,14 +33,14 @@ os.mkdir(outputfolder)
 file_list_raw = read_files_in_folder(inputfolder_raw)[0]
 sys.stdout.write('Processing ' + str(len(file_list_raw)) + ' images \n')
 file_list_seg = read_files_in_folder(inputfolder_seg)[0]
+file_list_seg = [f for f in file_list_seg if f.endswith('.png')]
 
 def processInput(x):
     file_in = os.path.join(inputfolder_raw, file_list_raw[x])
-    sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
+    # sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
     raw_image = cv2.imread(file_in, -1)
-    
     file_in = os.path.join(inputfolder_seg, file_list_seg[x])
-    sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
+    # sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
     seg = cv2.imread(file_in, -1)    
     seg = np.uint8(seg)
     seg = np.clip(seg, 40, 255)
@@ -49,12 +52,14 @@ def processInput(x):
     overlayed = rgb_img # initialize
     overlayed = np.uint8(np.uint8(0.60* rgb_img) + np.uint8(0.40* rgb_seg))
     overlayed = skimage.exposure.rescale_intensity(overlayed, in_range=(0, 225), out_range=(0, 255))
-    
     file_out = os.path.join(outputfolder, file_list_seg[x])
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     skimage.io.imsave(file_out, overlayed)
 
-
-p_tasks = 5
+p_tasks = max(1, min(len(file_list_raw), int(cpu_count()/2)))
 sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
 results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list_raw)))
+
+print('Overlay of images completed')
+print("Total time = ", time.time() - tic)
+print('Your results are in: %s\n' % (fm_dir))
