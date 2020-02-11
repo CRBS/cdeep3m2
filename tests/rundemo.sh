@@ -63,7 +63,7 @@ if [ ! -z "$predict_logs" ]; then
   rm -f /tmp/predict_seg_new*
 fi
 
-if [ -f $output_folder/ERROR ]
+if [ -f $output_folder/ERROR ]; then
   echo "There was an error."
   exit 1
 else
