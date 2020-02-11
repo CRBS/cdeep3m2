@@ -62,4 +62,4 @@ results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, le
 
 print('Overlay of images completed')
 print("Total time = ", time.time() - tic)
-print('Your results are in: %s\n' % (fm_dir))
+print('Your results are in: %s\n' % (outputfolder))
