@@ -187,6 +187,7 @@ wait
 num_models=$(get_number_of_models "$model_list")
 
 resultdir="$out_dir/ensembled"
+overlaydir="$out_dir/overlay"
 
 if [ "$num_models" -gt 1 ] ; then
     space_sep_models=$(get_models_as_space_separated_list "$model_list")
@@ -195,11 +196,15 @@ if [ "$num_models" -gt 1 ] ; then
     done
 
     ensemble_args=$(echo "$ensemble_args $resultdir")
-
     python3 "${script_dir}"/EnsemblePredictions.py ${ensemble_args}
-    ecode=$?
     if [ $ecode != 0 ] ; then
         fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: EnsemblePredictions.py $ensemble_args" 12
+    fi    
+    overlay_args=$(echo "$resultdir $images $overlaydir")
+    python3 "${script_dir}"/Create_overlays.py ${overlay_args}
+    ecode=$?
+    if [ $ecode != 0 ] ; then
+        fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: Create_overlays.py $overlay_args" 12
     fi
 else
     ln -s "$model_list" "$resultdir"
