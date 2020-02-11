@@ -31,7 +31,7 @@ for i in range(1, len(sys.argv)):
         sys.exit()
 
     print('Generating Average Prediction of %s\n' % (inputdir))
-    average_prob_folder = merge_16_probs_v3(inputdir)
+    average_prob_folder = merge_16_probs(inputdir)
 
 print('Elapsed runtime for data-deaugmentation: %04d seconds.\n' %
       (np.round(time.time() - tic)))
