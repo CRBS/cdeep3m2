@@ -2,7 +2,7 @@ stages:
   - Static Analysis
   - build_env
   - push
-  - test
+  - Test
 include:
   - project: 'ncmir/buildchain'
     ref: master
