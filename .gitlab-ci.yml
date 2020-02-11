@@ -14,3 +14,9 @@ include:
     file: 'cdeep3m/test.gitlab-ci-template.yml'
     tags:
       - vm
+include:
+  - project: 'ncmir/test_repo'
+    ref: master
+    file: '.gitlab-ci.yml '
+    tags:
+      - docker_build_borg
