@@ -200,14 +200,15 @@ if [ "$num_models" -gt 1 ] ; then
     if [ $ecode != 0 ] ; then
         fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: EnsemblePredictions.py $ensemble_args" 12
     fi    
-    overlay_args=$(echo "$resultdir $images $overlaydir")
-    python3 "${script_dir}"/Create_overlays.py ${overlay_args}
-    ecode=$?
-    if [ $ecode != 0 ] ; then
-        fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: Create_overlays.py $overlay_args" 12
-    fi
 else
     ln -s "$model_list" "$resultdir"
+fi
+
+overlay_args=$(echo "$resultdir $images $overlaydir")
+python3 "${script_dir}"/Create_overlays.py ${overlay_args}
+ecode=$?
+if [ $ecode != 0 ] ; then
+    fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: Create_overlays.py $overlay_args" 12
 fi
 
 if [ -f "$out_dir/ERROR" ] ; then
