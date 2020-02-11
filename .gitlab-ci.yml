@@ -12,19 +12,16 @@ include:
       - vm
   - project: 'ncmir/buildchain'
     ref: master
-    file: 
-      - 'cdeep3m/build_docker_env.gitlab-ci-template.yml'
+    file: 'cdeep3m/build_docker_env.gitlab-ci-template.yml'
     tags:
       - docker_build_borg
   - project: 'ncmir/buildchain'
     ref: master
-    file: 
-      - 'cdeep3m/Makefile.config'
+    file: 'cdeep3m/Makefile.config'
     tags:
       - docker_build_borg
   - project: 'ncmir/buildchain'
     ref: master
-    file: 
-      - 'cdeep3m/Dockerfile.env'
+    file: 'cdeep3m/Dockerfile.env'
     tags:
       - docker_build_borg
