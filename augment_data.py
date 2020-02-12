@@ -79,7 +79,7 @@ def addtl_augs(strength, img_in, lbl_in, i=0):
         15: [HistogramEqualization, ElasticDistortion]
     }
 
-    if factor(strength, i) <= 0:
+    if factor(strength, i) == 0 or strength == -1:
         img_out, lbl_out = img_in, lbl_in
     else:
         if i == 0:
