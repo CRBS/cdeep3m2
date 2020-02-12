@@ -18,8 +18,6 @@ from joblib import Parallel, delayed
 import cv2
 from read_files_in_folder import read_files_in_folder
 
-
-
 print(sys.argv)
 inputfolder = sys.argv[1]
 outputfolder = sys.argv[2]
