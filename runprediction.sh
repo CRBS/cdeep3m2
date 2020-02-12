@@ -132,7 +132,6 @@ fi
 #default denoising unless turned off
 if [ $denoise != 0 ] ; then
     enhancedimages="$out_dir/enhanced"
-    mkdir -p "$enhancedimages"
     python3 "$script_dir"/enhance_stack.py "$images" "$enhancedimages" "$denoise"
     ecode=$?
     if [ $ecode != 0 ] ; then
