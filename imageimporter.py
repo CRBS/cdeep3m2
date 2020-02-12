@@ -3,15 +3,15 @@ import sys
 import h5py
 import numpy as np
 import cv2
+from PIL import Image as pilimage
 
 
 def imageimporter(img_path):
-"""
+    """
 imageimporter: loads image data from folder or from an individual image stack
 -----------------------------------------------------------------------------
 M Haberl -- CDeep3M -- NCMIR/NBCR, UCSD -- Date: 01/2019
------------------------------------------------------------------------------
-"""
+-----------------------------------------------------------------------------"""
 
     print('Image importer loading ... ')
     print(img_path)
@@ -33,6 +33,7 @@ M Haberl -- CDeep3M -- NCMIR/NBCR, UCSD -- Date: 01/2019
             for i in range(dataset.n_frames):
                 dataset.seek(i)
                 imgstack.append(np.stack((np.array(dataset),), axis=-1))
+            pilimage.close()
     elif os.path.isdir(img_path):
         png_list = [f for f in os.listdir(img_path) if f.endswith('.png')]
         tif_list = [f for f in os.listdir(img_path) if f.endswith('.tif')]
