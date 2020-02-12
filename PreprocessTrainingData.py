@@ -53,7 +53,7 @@ def main():
                 i += 3
         else:
             ends.append(i - 1)
-            augmentation_level.append('0')
+            augmentation_level.append('-1')
             third_aug_lvl.append('0')
             i += 2
 
@@ -79,16 +79,6 @@ def main():
         print('Output Path:', outdir)
 
         # ----------------------------------------------------------------------------------------
-        # Load training images
-        # ----------------------------------------------------------------------------------------
-
-        print('Loading:')
-        print(training_img_path)
-        imgstack = imageimporter(training_img_path)
-        print('Verifying images')
-        checkpoint_nobinary(imgstack)
-
-        # ----------------------------------------------------------------------------------------
         # Load train labels
         # ----------------------------------------------------------------------------------------
 
@@ -99,6 +89,27 @@ def main():
         checkpoint_isbinary(lblstack)
         if np.max(lblstack[:]) != 1:
             lblstack = np.divide(lblstack, np.max(lblstack[:]))
+
+        # ----------------------------------------------------------------------------------------
+        # apply denoising
+        # ----------------------------------------------------------------------------------------
+
+        if strength == -1:
+            enhanced_path = os.path.join(training_img_path, 'enhanced')
+            run_enhancement = 'python3 enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' ' + 2
+            os.system(run_enhancement)
+            training_img_path = enhanced_path
+
+        # ----------------------------------------------------------------------------------------
+        # Load training images
+        # ----------------------------------------------------------------------------------------
+
+        print('Loading:')
+        print(training_img_path)
+        imgstack = imageimporter(training_img_path)
+        print('Verifying images')
+        checkpoint_nobinary(imgstack)
+
         # ----------------------------------------------------------------------------------------
         # Check size of images and labels
         # ----------------------------------------------------------------------------------------
