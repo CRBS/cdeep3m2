@@ -57,7 +57,7 @@ M Haberl -- CDeep3M -- NCMIR/NBCR, UCSD -- Date: 01/2019
                         cv2.imread(
                             os.path.join(
                                 img_path,
-                                filename), -1)),
+                                filename), 0)),
                      ),
                     axis=-
                     1) for filename in file_list]
