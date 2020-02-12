@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # image_enhance performs image measurements of noise levels and automated enhancements
 #
 # syntax: python3 image_enhance.py inputfolder outputfolder 3
@@ -14,33 +14,40 @@ import sys
 import os
 import numpy as np
 import skimage
+import skimage.util
+import skimage.restoration
+import skimage.exposure
+import skimage.io
 from multiprocessing import cpu_count
 from joblib import Parallel, delayed
 import cv2
 from read_files_in_folder import read_files_in_folder
 
-print(sys.argv)
+sys.stdout.write('Runnning image enhancements\n')
+#print(sys.argv)
 inputfolder = sys.argv[1]
 outputfolder = sys.argv[2]
 cutperc = 2
 if len(sys.argv) > 3:
     cutperc = int(sys.argv[3])
-sys.stdout.write('Removing ' + str(cutperc) + ' percentile of grey values \n')
 os.mkdir(outputfolder)
 file_list = read_files_in_folder(inputfolder)[0]
 sys.stdout.write('Processing ' + str(len(file_list)) + ' images \n')
-
+sys.stdout.write('Removing ' + str(cutperc) + ' percentile of grey values \n')
 def processInput(x):
     file_in = os.path.join(inputfolder, file_list[x])
     sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
     img = cv2.imread(file_in, cv2.IMREAD_UNCHANGED)
     sys.stdout.write('Type: ' + str(img.dtype) + '\n')
-    print(str(img.shape) + '\n')
+    #print(str(img.shape) + '\n')
     # Check 3rd dimension here, if loaded as RGB, remove 3rd dimension here
     if len(img.shape) > 2:
-        print('Converting RGB  to grey level image')
+        #print('Converting RGB  to grey level image')
         img = img[:, :, 0]
-    img = skimage.img_as_float64(img)
+    try:
+        img = skimage.util.img_as_float(img)
+    except:
+        img = skimage.img_as_float64(img)
     # remove extreme outlier pixels before denoising
     #if img.dtype~=uint8
     img = skimage.exposure.rescale_intensity(img, in_range=(np.percentile(img, 1), np.percentile(img, 99)), out_range=(0, 1))
@@ -51,11 +58,11 @@ def processInput(x):
     img = skimage.exposure.rescale_intensity(img, in_range=(np.percentile(img, cutperc), np.percentile(img, 100-cutperc)), out_range=(0, 1))
     file_out = os.path.join(outputfolder, file_list[x])
     sigma_est2 = skimage.restoration.estimate_sigma(skimage.img_as_float(img))
-    print(file_out + ": Estimated Gaussian noise stdev before = {} vs after denoising = {}".format(sigma_est1) .format(sigma_est2))
+    #sys.stdout.write(file_out + ": Estimated Gaussian noise stdev before " + str(sigma_est1) + " vs after denoising = " + str(sigma_est2))
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     img = skimage.img_as_ubyte(img)
     skimage.io.imsave(file_out, img)
 
 p_tasks = max(1, min(len(file_list), int(cpu_count()-1)))
-sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
+#sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
 results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list)))
