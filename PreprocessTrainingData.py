@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 # PreprocessTraining
-# Makes augmented hdf5 datafiles from raw and label images
+# Generates augmented hdf5 datafiles from raw and label images
 #
-# Syntax : PreprocessTraining /ImageData/training/images/ /ImageData/training/labels/ /Augmentation level/ /ImageData/augmentedtraining/
+# Syntax : PreprocessTraining.py /ImageData/training/images/ /ImageData/training/labels/ /Augmentation level/ /ImageData/augmentedtraining/
 #
+# Example usage: ./PreprocessTrainingData.py ./mito_testsample/training/images/ ./mito_testsample/training/labels/ -1 3 mito_testsample/training/augmented_data
+# 
+#
+# Primary 16 augmentations (rotations, flips, z-invert) are always performed
+# Secondary augmentations (injecting and removing noise, contrast adjustments) can be regulated in intensity (0-10), default in Version 2.0.0 is set to perform denoising and contrast optimization (-1)
+# Tertiary augmentaiotns (resizing) can be regulated in intensity (0-10), default is no 
 #
 # ----------------------------------------------------------------------------------------
-# PreprocessTraining for Deep3M -- NCMIR/NBCR, UCSD -- Date: 08/2019
+# PreprocessTraining for CDeep3M (Version >= 2.0.0) -- NCMIR/NBCR, UCSD -- Date: 08/2019
 # ----------------------------------------------------------------------------------------
 #
 import os
@@ -40,7 +46,7 @@ def main():
 
     i = 2
     while i <= len(arg_list):
-        if arg_list[i].isdigit() or arg_list[i].endswith('.ini'):
+        if arg_list[i].isdigit() or arg_list[i] == '-1' or  arg_list[i].endswith('.ini'):
             if arg_list[i + 1].isdigit():
                 ends.append(i - 1)
                 augmentation_level.append(arg_list[i])
@@ -53,7 +59,7 @@ def main():
                 i += 3
         else:
             ends.append(i - 1)
-            augmentation_level.append('0')
+            augmentation_level.append('-1')
             third_aug_lvl.append('0')
             i += 2
 
@@ -79,16 +85,6 @@ def main():
         print('Output Path:', outdir)
 
         # ----------------------------------------------------------------------------------------
-        # Load training images
-        # ----------------------------------------------------------------------------------------
-
-        print('Loading:')
-        print(training_img_path)
-        imgstack = imageimporter(training_img_path)
-        print('Verifying images')
-        checkpoint_nobinary(imgstack)
-
-        # ----------------------------------------------------------------------------------------
         # Load train labels
         # ----------------------------------------------------------------------------------------
 
@@ -99,6 +95,28 @@ def main():
         checkpoint_isbinary(lblstack)
         if np.max(lblstack[:]) != 1:
             lblstack = np.divide(lblstack, np.max(lblstack[:]))
+
+        # ----------------------------------------------------------------------------------------
+        # apply denoising
+        # ----------------------------------------------------------------------------------------
+
+        if strength == -1:
+            print('Running image enhancement')
+            enhanced_path = os.path.join(training_img_path, 'enhanced')
+            run_enhancement = 'python3 enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' ' + 2
+            os.system(run_enhancement)
+            training_img_path = enhanced_path
+
+        # ----------------------------------------------------------------------------------------
+        # Load training images
+        # ----------------------------------------------------------------------------------------
+
+        print('Loading:')
+        print(training_img_path)
+        imgstack = imageimporter(training_img_path)
+        print('Verifying images')
+        checkpoint_nobinary(imgstack)
+
         # ----------------------------------------------------------------------------------------
         # Check size of images and labels
         # ----------------------------------------------------------------------------------------
@@ -133,9 +151,12 @@ def main():
             inv_img_n = np.flip(img, 0).astype(np.uint8)  # augmentations 9-16
             inv_lb_n = np.flip(lb, 0).astype(np.uint8)  # augmentations 9-16
             del img, lb
-            img_result, lb_result, addtl_choices = addtl_augs(
-                strength, img_n, lb_n, i)  # apply secondary augmentations
 
+            if strength != '-1':
+                img_result, lb_result, addtl_choices = addtl_augs(
+                    strength, img_n, lb_n, i)  # apply secondary augmentations
+            else:
+                img_result, lb_result = img_n, lb_n
             del img_n, lb_n
             img_result_r, lb_result_r = third_augs(
                 third_str, img_result, lb_result, i)  # apply tertiary augmentations
@@ -154,9 +175,12 @@ def main():
             del lb_result, lb_result_r, lb_result_f
 
             # v9-16
-            inv_img_result, inv_lb_result, inv_addtl_choices = addtl_augs(
-                strength, inv_img_n, inv_lb_n, i + 8)
-            del inv_img_n, inv_lb_n, inv_addtl_choices
+            if strength != '-1':
+                inv_img_result, inv_lb_result, inv_addtl_choices = addtl_augs(
+                    strength, inv_img_n, inv_lb_n, i + 8) # apply secondary augmentations
+            else:
+                inv_img_result, inv_lb_result = inv_img_n, inv_lb_n
+            del inv_img_n, inv_lb_n
             inv_img_result_r, inv_lb_result_r = third_augs(
                 third_str, inv_img_result, inv_lb_result, i + 8)
             inv_img_result_f = inv_img_result_r.astype('float32')
@@ -174,8 +198,8 @@ def main():
             del inv_img_result, inv_img_result_r, inv_img_result_f
             del inv_lb_result, inv_lb_result_r, inv_lb_result_f
 
-        writecfg(outdir, j+1, addtl_choices, strength, third_str)
-        print('Saving: ', filename)
+        #writecfg(outdir, j+1, addtl_choices, strength, third_str) # turned off temporarily, usefull for tracking secondary augm.
+        #print('Saving: ', filename)
 
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)

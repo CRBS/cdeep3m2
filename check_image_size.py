@@ -10,7 +10,7 @@ import os
 import h5py
 from PIL import Image
 import numpy as np
-import skimage
+import cv2
 from read_files_in_folder import read_files_in_folder
 
 Image.MAX_IMAGE_PIXELS = 10000000000000
@@ -57,7 +57,7 @@ def check_image_size(img_path):
 
             filename = os.path.join(img_path, file_list[0])
             print('Reading file: ', filename)
-            imarray = skimage.io.imread(filename)
+            imarray = cv2.imread(filename, -1)
             imagesize = (imarray.shape[0], imarray.shape[1], len(file_list))
             return imagesize
 

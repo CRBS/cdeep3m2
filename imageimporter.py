@@ -2,15 +2,15 @@ import os
 import sys
 import h5py
 import numpy as np
+import cv2
 from PIL import Image as pilimage
-import skimage
 
 
 def imageimporter(img_path):
     """
 imageimporter: loads image data from folder or from an individual image stack
 -----------------------------------------------------------------------------
- CDeep3M -- NCMIR/NBCR, UCSD -- Date: 01/2019
+M Haberl -- CDeep3M -- NCMIR/NBCR, UCSD -- Date: 01/2019
 -----------------------------------------------------------------------------"""
 
     print('Image importer loading ... ')
@@ -33,6 +33,7 @@ imageimporter: loads image data from folder or from an individual image stack
             for i in range(dataset.n_frames):
                 dataset.seek(i)
                 imgstack.append(np.stack((np.array(dataset),), axis=-1))
+            pilimage.close()
     elif os.path.isdir(img_path):
         png_list = [f for f in os.listdir(img_path) if f.endswith('.png')]
         tif_list = [f for f in os.listdir(img_path) if f.endswith('.tif')]
@@ -53,14 +54,13 @@ imageimporter: loads image data from folder or from an individual image stack
             imgstack = [
                 np.stack(
                     (np.array(
-                        skimage.io.imread(
+                        cv2.imread(
                             os.path.join(
                                 img_path,
-                                filename))),
+                                filename), 0)),
                      ),
                     axis=-
                     1) for filename in file_list]
-            # imgstack = np.array([pilimage.open(os.path.join(img_path,file_list[i])) for i in range(0, len(file_list))])
             shape = np.shape(imgstack)
             print(shape)
     else:

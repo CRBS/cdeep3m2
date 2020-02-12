@@ -14,7 +14,8 @@ trap "shutdown" SIGINT SIGTERM
 script_name=$(basename "$0")
 script_dir=$(dirname "$0")
 version="???"
-maxpackages="5"
+maxpackages="6"
+denoise="2"
 # shellcheck source=commonfunctions.sh
 source "${script_dir}/commonfunctions.sh"
 
@@ -44,6 +45,12 @@ positional arguments:
 
 optional arguments:
   -h, --help           show this help message and exit
+  --denoise            Since Version 2.0.0 CDeep3M uses a denoising
+                       algorithm in the default settings, which measures
+                       noise levels in the images and reduces noise accordingly.
+                       If you wish to turn of denoising or use models trained with
+                       CDeep3M 1.X, set this value to 0 in runprediction.sh
+                       as well as in PreprocessTrainingData.py.
   --gpu                Which GPU to use, can be a number ie 0 or 1 or
                        all to use all GPUs (default $gpu)
   --models             Only run prediction on models specified
@@ -70,6 +77,7 @@ while true ; do
     case "$1" in
         -h ) usage ;; 
         --help ) usage ;;
+        --denoise ) denoise=$2 ; shift 2 ;;    
         --gpu ) gpu=$2 ; shift 2 ;;
         --models ) model_list=$2 ; shift 2 ;;
         --augspeed ) aug_speed=$2 ; shift 2 ;;
@@ -121,11 +129,22 @@ if [ $ecode != 0 ] ; then
     fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: mkdir -p \"$augimages\"" 3
 fi
 
+#default denoising unless turned off
+if [ $denoise != 0 ] ; then
+    enhancedimages="$out_dir/enhanced"
+    python3 "$script_dir"/enhance_stack.py "$images" "$enhancedimages" "$denoise"
+    ecode=$?
+    if [ $ecode != 0 ] ; then
+        fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: $script_dir/enhance.py $images $enhancedimages" 4
+    fi
+    images=$enhancedimages
+fi
+
 python3 "$script_dir"/DefDataPackages.py "$images" "$augimages"
 ecode=$?
 
 if [ $ecode != 0 ] ; then
-    fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: DefDataPackages.py \"$images\" \"$augimages\"" 4
+    fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: DefDataPackages.py $images $augimages" 4
 fi
 
 cp "$out_dir/augimages/de_augmentation_info.json" "$out_dir/."
@@ -187,6 +206,7 @@ wait
 num_models=$(get_number_of_models "$model_list")
 
 resultdir="$out_dir/ensembled"
+overlaydir="$out_dir/overlay"
 
 if [ "$num_models" -gt 1 ] ; then
     space_sep_models=$(get_models_as_space_separated_list "$model_list")
@@ -195,14 +215,19 @@ if [ "$num_models" -gt 1 ] ; then
     done
 
     ensemble_args=$(echo "$ensemble_args $resultdir")
-
     python3 "${script_dir}"/EnsemblePredictions.py ${ensemble_args}
-    ecode=$?
     if [ $ecode != 0 ] ; then
         fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: EnsemblePredictions.py $ensemble_args" 12
-    fi
+    fi    
 else
     ln -s "$model_list" "$resultdir"
+fi
+
+overlay_args=$(echo "$resultdir $images $overlaydir")
+python3 "${script_dir}"/Create_overlays.py ${overlay_args}
+ecode=$?
+if [ $ecode != 0 ] ; then
+    fatal_error "$out_dir" "ERROR, a non-zero exit code ($ecode) was received from: Create_overlays.py $overlay_args" 12
 fi
 
 if [ -f "$out_dir/ERROR" ] ; then

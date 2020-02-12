@@ -1,7 +1,7 @@
-# New Postprocessing
+# Postprocessing Packages
 # Syntax: StartPostprocessing /example/seg1/predict/ /example/seg2/predict/
 #
-# Runtime estimate 2min for 1024x1024x100 dataset
+#
 #
 # ------------------------------------------------------------------
 # New -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 10/2017
@@ -11,7 +11,7 @@ import os
 import sys
 import time
 import numpy as np
-from merge_16_probs_v3 import merge_16_probs_v3
+from merge_16_probs import merge_16_probs
 
 if len(sys.argv) < 2:
     print('Please specify at least 1 input directory')
@@ -31,7 +31,7 @@ for i in range(1, len(sys.argv)):
         sys.exit()
 
     print('Generating Average Prediction of %s\n' % (inputdir))
-    average_prob_folder = merge_16_probs_v3(inputdir)
+    average_prob_folder = merge_16_probs(inputdir)
 
 print('Elapsed runtime for data-deaugmentation: %04d seconds.\n' %
       (np.round(time.time() - tic)))
