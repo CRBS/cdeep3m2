@@ -192,8 +192,8 @@ def main():
             del inv_img_result, inv_img_result_r, inv_img_result_f
             del inv_lb_result, inv_lb_result_r, inv_lb_result_f
 
-        writecfg(outdir, j+1, addtl_choices, strength, third_str)
-        print('Saving: ', filename)
+        #writecfg(outdir, j+1, addtl_choices, strength, third_str) # turned off temporarily, usefull for tracking secondary augm.
+        #print('Saving: ', filename)
 
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)
