@@ -1,7 +1,9 @@
 stages:
   - Static Analysis
+  - build_env
+  - push
   - Test
-
+  - build_workflow
 include:
   - project: 'ncmir/buildchain'
     ref: master
@@ -11,5 +13,10 @@ include:
   - project: 'ncmir/buildchain'
     ref: master
     file: 'cdeep3m/test.gitlab-ci-template.yml'
+    tags:
+      - vm
+  - project: 'ncmir/buildchain'
+    ref: master
+    file: 'cdeep3m/build_prp_workflow.gitlab-ci-template.yml'
     tags:
       - vm

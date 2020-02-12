@@ -63,4 +63,10 @@ if [ ! -z "$predict_logs" ]; then
   rm -f /tmp/predict_seg_new*
 fi
 
-echo "End of demo, check $output_folder for data"
+if [ -f $output_folder/ERROR ]; then
+  echo "There was an error."
+  exit 1
+else
+  echo "End of demo, check $output_folder for data"
+  exit 0
+fi
