@@ -14,6 +14,7 @@ import sys
 import os
 import numpy as np
 import skimage
+from multiprocessing import cpu_count
 from joblib import Parallel, delayed
 import cv2
 from read_files_in_folder import read_files_in_folder
@@ -43,18 +44,18 @@ def processInput(x):
     # remove extreme outlier pixels before denoising
     #if img.dtype~=uint8
     img = skimage.exposure.rescale_intensity(img, in_range=(np.percentile(img, 1), np.percentile(img, 99)), out_range=(0, 1))
-    sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))
-    print(file_in + ": Estimated Gaussian noise standard deviation before denoising = {}".format(sigma_est))
+    sigma_est1 = skimage.restoration.estimate_sigma(skimage.img_as_float(img))
     #img = skimage.filters.gaussian(img, sigma=1, output=None, mode='nearest', cval=0, multichannel=None, preserve_range=False, truncate=4.0)
-    img = skimage.restoration.denoise_tv_chambolle(img, weight=sigma_est/2, multichannel=False)
+    img = skimage.restoration.denoise_tv_chambolle(img, weight=sigma_est1/2, multichannel=False)
     #img = skimage.restoration.denoise_tv_bregman(img, weight=0.2, max_iter=100, eps=0.001, isotropic=True);
     img = skimage.exposure.rescale_intensity(img, in_range=(np.percentile(img, cutperc), np.percentile(img, 100-cutperc)), out_range=(0, 1))
     file_out = os.path.join(outputfolder, file_list[x])
-    sigma_est = skimage.restoration.estimate_sigma(skimage.img_as_float(img))
-    print(file_out + ": Estimated Gaussian noise standard deviation after denoising = {}".format(sigma_est))
+    sigma_est2 = skimage.restoration.estimate_sigma(skimage.img_as_float(img))
+    print(file_out + ": Estimated Gaussian noise stdev before = {} vs after denoising = {}".format(sigma_est1) .format(sigma_est2))
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     img = skimage.img_as_ubyte(img)
     skimage.io.imsave(file_out, img)
-p_tasks = 5
+
+p_tasks = max(1, min(len(file_list), int(cpu_count()-1)))
 sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
 results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list)))
