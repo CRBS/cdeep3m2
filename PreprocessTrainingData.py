@@ -12,7 +12,7 @@
 # Tertiary augmentaiotns (resizing) can be regulated in intensity (0-10), default is no 
 #
 # ----------------------------------------------------------------------------------------
-# PreprocessTraining for CDeep3M (Version 2.0.0) -- NCMIR/NBCR, UCSD -- Date: 08/2019
+# PreprocessTraining for CDeep3M (Version >= 2.0.0) -- NCMIR/NBCR, UCSD -- Date: 08/2019
 # ----------------------------------------------------------------------------------------
 #
 import os
