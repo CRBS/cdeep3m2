@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 # PreprocessTraining
-# Makes augmented hdf5 datafiles from raw and label images
+# Generates augmented hdf5 datafiles from raw and label images
 #
-# Syntax : PreprocessTraining /ImageData/training/images/ /ImageData/training/labels/ /Augmentation level/ /ImageData/augmentedtraining/
+# Syntax : PreprocessTraining.py /ImageData/training/images/ /ImageData/training/labels/ /Augmentation level/ /ImageData/augmentedtraining/
 #
+# Example usage: ./PreprocessTrainingData.py ./mito_testsample/training/images/ ./mito_testsample/training/labels/ -1 3 mito_testsample/training/augmented_data
+# 
+#
+# Primary 16 augmentations (rotations, flips, z-invert) are always performed
+# Secondary augmentations (injecting and removing noise, contrast adjustments) can be regulated in intensity (0-10), default in Version 2.0.0 is set to perform denoising and contrast optimization (-1)
+# Tertiary augmentaiotns (resizing) can be regulated in intensity (0-10), default is no 
 #
 # ----------------------------------------------------------------------------------------
-# PreprocessTraining for Deep3M -- NCMIR/NBCR, UCSD -- Date: 08/2019
+# PreprocessTraining for CDeep3M (Version 2.0.0) -- NCMIR/NBCR, UCSD -- Date: 08/2019
 # ----------------------------------------------------------------------------------------
 #
 import os
@@ -40,7 +46,7 @@ def main():
 
     i = 2
     while i <= len(arg_list):
-        if arg_list[i].isdigit() or arg_list[i].endswith('.ini'):
+        if arg_list[i].isdigit() or arg_list[i] == '-1' or  arg_list[i].endswith('.ini'):
             if arg_list[i + 1].isdigit():
                 ends.append(i - 1)
                 augmentation_level.append(arg_list[i])
