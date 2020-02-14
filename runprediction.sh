@@ -50,7 +50,7 @@ optional arguments:
                        noise levels in the images and reduces noise accordingly.
                        If you wish to turn of denoising or use models trained with
                        CDeep3M 1.X, set this value to 0 in runprediction.sh
-                       as well as in PreprocessTrainingData.py.
+                       as well as for the training phase (in PreprocessTrainingData.py).
   --gpu                Which GPU to use, can be a number ie 0 or 1 or
                        all to use all GPUs (default $gpu)
   --models             Only run prediction on models specified
@@ -70,7 +70,7 @@ optional arguments:
     exit 1;
 }
 
-TEMP=$(getopt -o h --long "help,models:,augspeed:,maxpackages:,gpu:" -n "$0" -- "$@")
+TEMP=$(getopt -o h --long "help,denoise:,models:,augspeed:,maxpackages:,gpu:" -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 while true ; do
