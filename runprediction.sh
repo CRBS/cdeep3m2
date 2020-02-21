@@ -92,7 +92,7 @@ if [ $# -ne 3 ] ; then
 fi
 
 declare -r train_out=$1
-declare -r images=$2
+declare images=$2
 declare -r out_dir=$3
 
 
