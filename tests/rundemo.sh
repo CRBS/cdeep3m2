@@ -2,9 +2,6 @@
 # cdeep3m demo for testing
 # taken from the nbcr training
 
-# SET gpu_to_use TO USE A SPECIFIC GPU INSTEAD OF ALL GPU(s)
-gpu_to_use=
-
 working_folder=~/cdeep3m_demo
 sbem_folder=$working_folder/sbem
 sample_folder=$working_folder/mito_testsample
@@ -46,14 +43,9 @@ if [ ! -d "$sample_folder" ]; then
   cp -r $mito_folder $working_folder
 fi
 
-#runprediction.sh --gpu=$gpu_to_use $working_folder/sbem/mitochrondria/xy5.9nm40nmz/30000iterations_train_out $working_folder/mito_testsample/testset/ $working_folder/predictout30k
 echo "Starting prediction run...."
 
-if [ ! -z "$gpu_to_use" ]; then
-  runprediction.sh --gpu=$gpu_to_use $sbem_folder/mitochrondria/xy5.9nm40nmz/30000iterations_train_out $sample_folder/testset/ $output_folder
-else
-  runprediction.sh $sbem_folder/mitochrondria/xy5.9nm40nmz/30000iterations_train_out $sample_folder/testset/ $output_folder
-fi
+runprediction.sh $sbem_folder/mitochrondria/xy5.9nm40nmz/30000iterations_train_out $sample_folder/testset/ $output_folder
 
 predict_logs=`ls /tmp/predict_seg_new* 2> /dev/null`
 
