@@ -7,7 +7,7 @@ NCMIR/NBCR, UCSD -- CDeep3M -- Update: 08/2019 @mhaberl
 """
 import sys
 import os
-from multiprocessing import cpu_count
+#from multiprocessing import cpu_count
 from joblib import Parallel, delayed
 import cv2
 import numpy as np
@@ -41,25 +41,16 @@ def crop_png(
     file.close()
 
     def processInput(x):
-        img = cv2.imread(lines[x], cv2.IMREAD_UNCHANGED)
-        cropped = img[in1:in2, in3:in4]
-        sys.stdout.write('Saving: ' + str(outfiles[x]) + '\n')
-        # Get the information of the incoming image type
-        info = np.iinfo(cropped.dtype)
-        # normalize the data to 0 - 1
-        cropped = cropped.astype(np.float64) / info.max
-        cropped = 255 * cropped  # Now scale by 255
-        cropped = cropped.astype(np.uint8)
-        cv2.imwrite(outfiles[x], cropped)
+        img = cv2.imread(lines[x], 0)
+        cv2.imwrite(outfiles[x], img[in1:in2, in3:in4])
         #try:
         #    skimage.io.imsave(outfiles[x], cropped, as_grey=True)
         #except BaseException:
         #    skimage.io.imsave(outfiles[x], cropped)
         #return
     niceness = os.nice(0)
-    os.nice(10 - niceness)
-    p_tasks = max(1, min(10, int(cpu_count() / 2.5)))
-    # p_tasks = 2
+    os.nice(5 - niceness)
+    p_tasks = max(1, min(10, int(os.cpu_count() - 1)))
     sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
     Parallel(n_jobs=p_tasks)(delayed(processInput)(i)
                              for i in range(0, len(lines)))

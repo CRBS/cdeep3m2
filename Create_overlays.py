@@ -7,7 +7,7 @@
 # Output: RGB images saved in outputfolder
 #
 #----------------------------------------------------------------------------
-## CDeep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 10/2019
+## CDeep3M -- NCMIR, UCSD -- Author: M Haberl -- Date: 10/2019
 #-----------------------------------------------------------------------------
 
 import sys
@@ -56,7 +56,7 @@ def processInput(x):
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     skimage.io.imsave(file_out, overlayed)
 
-p_tasks = max(1, min(len(file_list_raw), int(cpu_count()/2)))
+p_tasks = max(1, min(len(file_list_raw), int(cpu_count() / 2)))
 sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
 results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list_raw)))
 

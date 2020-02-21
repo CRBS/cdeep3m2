@@ -4,7 +4,7 @@
 #
 #
 # -----------------------------------------------------------------------------
-# CDeep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 11/2017
+# CDeep3M -- NCMIR/NBCR, UCSD -- Author: M Haberl -- Date: 03/2019
 # -----------------------------------------------------------------------------
 import os
 import h5py
@@ -65,7 +65,7 @@ def imageimporter_large(img_path, area, z_stack, outfolder):
             with open(tempmat_outfile, 'w') as f:
                 for fl in range(z_stack[0], z_stack[1]):
                     f.write(os.path.join(
-                        tempdir, file_list[fl][:-3] + 'png') + '\n')
+                        tempdir, file_list[fl][:-3] + 'tif') + '\n')
 
             crop_png(
                 tempmat_infile,
@@ -77,7 +77,7 @@ def imageimporter_large(img_path, area, z_stack, outfolder):
 
             print('Reading images')
             imgstack = np.array([cv2.imread(os.path.join(
-                tempdir, file_list[i][:-3] + 'png'), -1) for i in range(z_stack[0], z_stack[1])])
+                tempdir, file_list[i][:-3] + 'tif'), -1) for i in range(z_stack[0], z_stack[1])])
             # shape = np.shape(imgstack)
             # print (shape)
 
