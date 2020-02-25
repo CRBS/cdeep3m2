@@ -14,8 +14,4 @@ include:
     file: 'cdeep3m/test.gitlab-ci-template.yml'
     tags:
       - vm
-  - project: 'ncmir/buildchain'
-    ref: master
-    file: 'cdeep3m/build_prp_workflow.gitlab-ci-template.yml'
-    tags:
-      - vm
+  
