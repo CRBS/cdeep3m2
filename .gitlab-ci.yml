@@ -3,7 +3,6 @@ stages:
   - build_env
   - push
   - Test
-  - build_workflow
 include:
   - project: 'ncmir/buildchain'
     ref: master
