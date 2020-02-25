@@ -35,6 +35,8 @@ sys.stdout.write('Processing ' + str(len(file_list_raw)) + ' images \n')
 file_list_seg = read_files_in_folder(inputfolder_seg)[0]
 file_list_seg = [f for f in file_list_seg if f.endswith('.png')]
 
+
+
 def processInput(x):
     file_in = os.path.join(inputfolder_raw, file_list_raw[x])
     # sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
@@ -52,7 +54,7 @@ def processInput(x):
     overlayed = rgb_img # initialize
     overlayed = np.uint8(np.uint8(0.60* rgb_img) + np.uint8(0.40* rgb_seg))
     overlayed = skimage.exposure.rescale_intensity(overlayed, in_range=(0, 225), out_range=(0, 255))
-    file_out = os.path.join(outputfolder, file_list_seg[x])
+    file_out = os.path.join(outputfolder, 'overlay_%03d.png' % (x) )
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     skimage.io.imsave(file_out, overlayed)
 
