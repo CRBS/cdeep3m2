@@ -1,4 +1,4 @@
-**# CDeep3M 2.0**
+# CDeep3M 2.0
 
 CDeep3M 2.0:
  * provides a plug-and-play deep learning solution for large-scale image segmentation of light, electron and X-ray microscopy.
