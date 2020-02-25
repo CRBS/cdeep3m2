@@ -54,7 +54,7 @@ def processInput(x):
     overlayed = rgb_img # initialize
     overlayed = np.uint8(np.uint8(0.60* rgb_img) + np.uint8(0.40* rgb_seg))
     overlayed = skimage.exposure.rescale_intensity(overlayed, in_range=(0, 225), out_range=(0, 255))
-    file_out = os.path.join(outputfolder, 'overlay_%03d.png' % (x) )
+    file_out = os.path.join(outputfolder, 'overlay_%04d.png' % (x+1) )
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     skimage.io.imsave(file_out, overlayed)
 
