@@ -34,9 +34,10 @@ def main():
         arg_list.append(arg)
 
     if len(arg_list) < 3:
-        print('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ ')
+        print('Use -> python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ /ImageData/training/augmented/')
         print('Secondary augmentation strength(int value or path to config file, no input for default 0)')
         print('Tertiary augmentation strength /ImageData/augmentedtraining/')
+        print('Example: python3 PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ 0 5 /ImageData/training/augmented/')
         return
 
 # counting number of training sets provided
@@ -100,10 +101,10 @@ def main():
         # apply denoising
         # ----------------------------------------------------------------------------------------
 
-        if strength == -1:
+        if strength == '-1':
             print('Running image enhancement')
-            enhanced_path = os.path.join(training_img_path, 'enhanced')
-            run_enhancement = 'python3 enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' ' + 2
+            enhanced_path = os.path.join(outdir, 'enhanced')
+            run_enhancement = 'enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' 2'
             os.system(run_enhancement)
             training_img_path = enhanced_path
 

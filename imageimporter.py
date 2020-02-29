@@ -50,7 +50,7 @@ M Haberl -- CDeep3M -- NCMIR/NBCR, UCSD -- Date: 01/2019
                 file_list = sorted(png_list)
 
             for filename in file_list:
-                print('Reading file:', img_path + filename)
+                print('Reading file:', os.path.join(img_path, filename))
             imgstack = [
                 np.stack(
                     (np.array(
