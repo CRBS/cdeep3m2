@@ -1,0 +1,44 @@
+# Changelog
+Tracking changes of CDeep3M Version 2.x.x
+
+## [alpha] - 2019
+### Changed
+- Converted all octave scripts to python3
+
+## [beta] - 2019-08-17
+### Added
+- Secondary (noise, contrast etc) and tertiary augmentations (size)
+- Use of multiple training datasets
+
+## [2.0.0] - 2020-02-10
+### Added
+- Image enhancemencements
+- Overlays of raw images with segmentation
+
+### Changed
+- Improved postprocessing speed
+- A number of bugs fixed
+- Changed padding to continuous instead of reflective
+
+## [2.0.1] - 2020-02-20
+
+### Changed
+- Denoising algorithm, to improve hyperthreading and reduce memory footprint
+- Default configuration that enhancements are performed during training and segmentation
+- Default configuration that overlays are generated at the end of segmentation
+
+## [2.0.2] - 2020-02-29
+### Added
+- PreprocessTraining writes file tracking configuration of augmentations for reproducibility
+### Added
+- Fixed bugs related to PreprocessTraining
+
+
+Convention used:
+## [Version] - Date
+### Added
+- A
+### Changed
+- B
+### Removed
+- C
