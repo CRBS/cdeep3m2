@@ -99,7 +99,7 @@ def addtl_augs(strength, img_in, lbl_in, i=0):
                 img_out, lbl_out = addtl_choices[i][1](
                     img1, lbl_in, factor(strength, 9))
 
-    return img_out, lbl_out
+    return img_out, lbl_out, addtl_choices
 
 
 # build pipelines for resizing

@@ -14,7 +14,7 @@ Created on Wed Sep 18 23:08:50 2019
 import os.path
 def writecfg(outdir, version, addtl_choices, strength, thirdstrength):
 
-    completeName = os.path.abspath(outdir + "/Config Settings v" + str(version) +  ".txt")
+    completeName = os.path.abspath(outdir + "/ConfigSettings_v" + str(version) +  ".txt")
     file = open(completeName, "w")
     file.write('secondary augmentation strength:')
     file.write(strength +  '\n')
