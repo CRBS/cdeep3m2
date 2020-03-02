@@ -3,11 +3,17 @@ Tracking changes of CDeep3M Version 2.x.x
 
 ## [Unreleased]
 
+## [2.0.3] - 2020-03-02
+
+### Changed
+Create_overlays.py: faster and reduce memory requirements
+
 ## [2.0.2] - 2020-02-29
 
 ### Added
+- Started CHANGELOG
 - PreprocessTraining writes file tracking configuration of augmentations for reproducibility
-### Added
+### Fixed
 - Fixed bugs related to PreprocessTraining
 
 ## [2.0.1] - 2020-02-20
