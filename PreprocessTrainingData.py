@@ -84,7 +84,9 @@ def main():
 
         outdir = arg_list[len(arg_list) - 1]
         print('Output Path:', outdir)
-
+        if not os.path.isdir(outdir):
+            os.mkdir(outdir)
+            
         # ----------------------------------------------------------------------------------------
         # Load train labels
         # ----------------------------------------------------------------------------------------
@@ -135,9 +137,6 @@ def main():
 
         d_details = '/data'
         l_details = '/label'
-
-        if not os.path.isdir(outdir):
-            os.mkdir(outdir)
 
         ext = ".h5"
 
