@@ -22,7 +22,7 @@ import numpy as np
 from imageimporter import imageimporter
 from checkpoint_nobinary import checkpoint_nobinary
 from check_img_dims import check_img_dims
-from config_export import writecfg
+import config_export
 from augment_data import augment_data, addtl_augs, third_augs
 from checkpoint_isbinary import checkpoint_isbinary
 from dim_convert import dim_convert
@@ -198,8 +198,10 @@ def main():
             del inv_img_result, inv_img_result_r, inv_img_result_f
             del inv_lb_result, inv_lb_result_r, inv_lb_result_f
 
-        writecfg(outdir, j+1, addtl_choices, strength, third_str) # write configuration file into augmentation folder
-        print('Saving: ', filename)
+        if strength == '-1':
+            config_export.writecfg_den(outdir, j+1, strength, third_str)
+        else:
+            config_export.writecfg(outdir, j+1, addtl_choices, strength, third_str) # write configuration file into augmentation folder
 
     print('\n-> Training data augmentation completed')
     print('Training data stored in ', outdir)

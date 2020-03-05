@@ -90,7 +90,7 @@ done
 if [ $# -ne 3 ] ; then
     usage 
 fi
-
+echo "Running CDeep3M Version $version"
 declare -r train_out=$1
 declare images=$2
 declare -r out_dir=$3

@@ -5,9 +5,13 @@ Tracking changes of CDeep3M Version 2.x.x
 
 ## [2.1.0] - 2020-03-04
 
+### Added
+- Echo CDeep3M version from runtraining and runprediction
+
 ### Changed
 - fixed fatal error in caffetrain.sh causing runtraining to run without generating trained data
 - fixed error in PreprocessTrainingData.py starting enhance_stack.py
+- fixed config file writing from PreprocessTraining
 
 ## [2.0.3] - 2020-03-02
 

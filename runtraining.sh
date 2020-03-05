@@ -118,6 +118,7 @@ if [ $# -ne 2 ] ; then
   usage 
   #exit 1
 fi
+echo "Running CDeep3M Version $version"
 
 declare -r aug_train=$1
 declare -r train_out=$2
