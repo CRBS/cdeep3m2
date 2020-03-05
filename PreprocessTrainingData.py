@@ -106,7 +106,7 @@ def main():
         if strength == '-1':
             print('Running image enhancement')
             enhanced_path = os.path.join(outdir, 'enhanced_v' + str(j + 1))
-            run_enhancement = 'enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' 2'
+            run_enhancement = './enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' 2'
             os.system(run_enhancement)
             training_img_path = enhanced_path
 
