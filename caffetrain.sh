@@ -163,7 +163,7 @@ if [ ! "$latest_iteration" == "" ] ; then
 fi
 
 pushd "$model_dir" > /dev/null
-GLOG_log_dir=$log_dir "$CAFFE_PATH"/.build_release/tools/caffe.bin train --solver="$model_dir"/solver.prototxt --gpu "$gpu" "$snapshot_opts" > "${model_dir}/log/out.log" 2>&1
+GLOG_log_dir=$log_dir "$CAFFE_PATH"/.build_release/tools/caffe.bin train --solver="$model_dir"/solver.prototxt --gpu "$gpu" $snapshot_opts > "${model_dir}/log/out.log" 2>&1
 exitcode=$?
 popd > /dev/null
 
