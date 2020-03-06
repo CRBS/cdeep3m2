@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Plot Validation
 # Generates training vs validation loss and accuracy plots
 # Syntax : python3 PlotValidation.py ~/trainingdata/1fm/log
@@ -5,10 +6,10 @@
 
 import sys
 import os
-import matplotlib
+#import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 
 # takes in log file folder path as argument
 if len(sys.argv) != 2:
