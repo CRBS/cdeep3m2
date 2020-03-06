@@ -24,3 +24,4 @@ scikit-image==0.15.0
 scipy==1.2.1
 six==1.10.0
 prox-tv==3.3.0
+pandas==0.24.2
