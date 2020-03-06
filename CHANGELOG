@@ -7,6 +7,7 @@ Tracking changes of CDeep3M Version 2.x.x
 
 ### Added
 - Echo CDeep3M version from runtraining and runprediction
+- rundemo2.sh (runs very brief training and plots training graphs)
 
 ### Changed
 - fixed fatal error in caffetrain.sh causing runtraining to run without generating trained data
