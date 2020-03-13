@@ -1,4 +1,4 @@
-# CDeep3M2
+# CDeep3M Version 2
 [speedup]: https://giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3/-/wikis/Speed-up-processing-time
 [validation]: https://giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3/-/wikis/Add-Validation-to-training
 [transferlearning]: https://giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3/-/wikis/TransferLearning
@@ -9,6 +9,7 @@
 
 
 ## CDeep3M2 overview:
+
  * provides a plug-and-play deep learning solution for large-scale image segmentation of light, electron and X-ray microscopy.
  * is distributed as cloud formation template for AWS cloud instances, as docker container and as singularity container for local installs or supercomputer clusters.
  * is backwards compatible, allowing users to continue using models that have been trained with earlier versions of CDeep3M.
@@ -19,7 +20,8 @@
  * code implemented in Python 3.
  * Generates automatically enhanced images and an overlay of the segmentation with the enhanced images for visual verification.
 
-## Running CDeep3Mi2
+## Running CDeep3M2
+
         Use                                             Description
  * CDeep3M2-Preview:            Extremely quick tests, fully automated instantaneous runs
  * CDeep3M2-Docker container:   Local or remote, large runs, long trainings, simple installation, GPU access required
