@@ -27,7 +27,7 @@
 |  |  Use | Description | Link | Documentation
 | ------ | ------ | ------ | ------ | ------ |
 |  | **CDeep3M2-Preview:** | Extremely quick tests, fully automated instantaneous runs | [Link][previewcdeep3m] | [Documentation][previewFAQcdeep3m] |
-|  | **CDeep3M2-Docker:** | Local or remote, large runs, long trainings, simple installation, GPU access required | [Link][dockercdeep3m] | [Documentation][dockercdeep3m] |
+|  | **CDeep3M2-Docker:** | Local or remote, large runs, long trainings, simple installation, GPU with min 12GB vRAM required | [Link][dockercdeep3m] | [Documentation][dockercdeep3m] |
 |  | **CDeep3M2-AWS:** | Remote, large runs, long trainings, simple installation, pay for GPU/hour (entry level 0.50$/h) | [Link][AWScdeep3m] | Documentation |
 |  | **CDeep3M2-Colab:**  | Remote, short runs or re-training, simple installation, free GPU access | [Link][colabcdeep3m] | [Documentation][colabcdeep3m] |
 |  | **CDeep3M2-Singularity:** | Local or cluster, large runs, long trainings, often required for compute cluster | Link | Documentation |
