@@ -5,8 +5,10 @@
 [cdeep3mbiorxiv]: https://www.biorxiv.org/content/early/2018/06/21/353425
 [cdeep3mnaturemethods]: https://rdcu.be/5zIF
 [dockercdeep3m]: https://hub.docker.com/r/ncmir/cdeep3m
-
-
+[colabcdeep3m]: https://github.com/haberlmatt/cdeep3m-colab
+[previewcdeep3m]: https://cdeep3m.crbs.ucsd.edu/cdeep3m
+[previewFAQcdeep3m]: https://cdeep3m.crbs.ucsd.edu/home/faq
+[AWScdeep3m]: https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=cdeep3m-stack-py3-docker&templateURL=https://cf-templates-1i8oypshb6jhq-us-west-2.s3-us-west-2.amazonaws.com/cloud_formation_cdeep3m_py3-docker.json
 
 ## CDeep3M2 overview:
 
@@ -22,10 +24,10 @@
 
 ## Running CDeep3M2
 
-|  Use | Description |
-| ------ | ------ |
-| CDeep3M2-Preview: | Extremely quick tests, fully automated instantaneous runs |
-| CDeep3M2-Docker: | Local or remote, large runs, long trainings, simple installation, GPU access required | 
-| CDeep3M2-AWS: | Remote, large runs, long trainings, simple installation, pay for GPU/hour (entry level 0.50$/h) | 
-| CDeep3M2-Colab:  | Remote, short runs or re-training, simple installation, free GPU access | 
-| CDeep3M2-Singularity: | Local or cluster, large runs, long trainings, often required for compute cluster | 
+|  |  Use | Description | Link | Documentation
+| ------ | ------ | ------ | ------ | ------ |
+|  | **CDeep3M2-Preview:** | Extremely quick tests, fully automated instantaneous runs | [Link][previewcdeep3m] | [Documentation][previewFAQcdeep3m] |
+|  | **CDeep3M2-Docker:** | Local or remote, large runs, long trainings, simple installation, GPU access required | [Link][dockercdeep3m] | [Documentation][dockercdeep3m] |
+|  | **CDeep3M2-AWS:** | Remote, large runs, long trainings, simple installation, pay for GPU/hour (entry level 0.50$/h) | [Link][AWScdeep3m] | Documentation |
+|  | **CDeep3M2-Colab:**  | Remote, short runs or re-training, simple installation, free GPU access | [Link][colabcdeep3m] | [Documentation][colabcdeep3m] |
+|  | **CDeep3M2-Singularity:** | Local or cluster, large runs, long trainings, often required for compute cluster | Link | Documentation |
