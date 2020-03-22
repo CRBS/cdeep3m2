@@ -62,7 +62,6 @@ def main():
         area,
         z_stack,
         outdir)  # load only subarea here
-    checkpoint_nobinary(stack)
     print('Padding images\n')
     stack = add_z_padding(stack)  # adds 2 planes in the beginning and end
 

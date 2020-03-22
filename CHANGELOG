@@ -1,12 +1,17 @@
 # Changelog
 Tracking changes of CDeep3M Version 2.x.x
 
-## [Unreleased]
+## [Unreleased changes]
+
+## [2.1.1] - 2020-03-22
+### Changed
+- Remove test for binary data in PreprocessPackage
+- Update sample data
 
 ## [2.1.0] - 2020-03-04
 
 ### Added
-- Echo CDeep3M version from runtraining and runprediction
+- Echo CDeep3M Version from runtraining and runprediction
 - rundemo2.sh (runs very brief training and plots training graphs)
 
 ### Changed
