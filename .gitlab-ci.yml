@@ -3,6 +3,7 @@ stages:
   - build_env
   - push
   - Test
+  - mirror
 include:
   - project: 'ncmir/buildchain'
     ref: master
@@ -14,4 +15,20 @@ include:
     file: 'cdeep3m/test.gitlab-ci-template.yml'
     tags:
       - vm
-  
+
+github_mirror:
+  stage: mirror
+  image:
+    name: alpine/git
+    entrypoint: [ "/bin/sh", "-c" ]
+  variables:
+    GIT_STRATEGY: clone
+    GIT_CHECKOUT: "false"
+  script: |
+    cd /tmp
+    git clone --mirror ${CI_REPOSITORY_URL} project
+    cd project
+    git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com:CRBS/sync_test.git
+    git push --mirror github
+  tags:
+  - vm
