@@ -1,11 +1,11 @@
 # CDeep3M Version 2
-[speedup]: https://giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3/-/wikis/Speed-up-processing-time
-[validation]: https://giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3/-/wikis/Add-Validation-to-training
-[transferlearning]: https://giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3/-/wikis/TransferLearning
+[speedup]: https://github.com/CRBS/cdeep3m2/wiki/Speed-up-processing-time
+[validation]: https://github.com/CRBS/cdeep3m2/wiki/Add-Validation-to-training
+[transferlearning]: https://github.com/CRBS/cdeep3m2/wiki/TransferLearning
 [cdeep3mbiorxiv]: https://www.biorxiv.org/content/early/2018/06/21/353425
 [cdeep3mnaturemethods]: https://rdcu.be/5zIF
 [dockercdeep3m]: https://hub.docker.com/r/ncmir/cdeep3m
-[dockerDOCcdeep3m]: https://giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3/-/wikis/CDeep3M-Docker
+[dockerDOCcdeep3m]: https://github.com/CRBS/cdeep3m2/wiki/CDeep3M-Docker
 [colabcdeep3m]: https://github.com/haberlmatt/cdeep3m-colab
 [previewcdeep3m]: https://cdeep3m.crbs.ucsd.edu/cdeep3m
 [previewFAQcdeep3m]: https://cdeep3m.crbs.ucsd.edu/home/faq
