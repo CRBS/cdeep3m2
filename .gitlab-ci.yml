@@ -26,6 +26,7 @@ github_mirror:
     GIT_CHECKOUT: "false"
   script: |
     cd /tmp
+    rm -rf /tmp/project
     git clone --mirror ${CI_REPOSITORY_URL} project
     cd project
     git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/CRBS/cdeep3m2.git
