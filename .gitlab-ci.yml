@@ -31,4 +31,4 @@ github_mirror:
     git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/CRBS/sync_test.git
     git push --mirror github
   tags:
-  - vm
+  - build_discworld
