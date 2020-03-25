@@ -9,12 +9,12 @@ include:
     ref: master
     file: 'cdeep3m/code-quality.gitlab-ci-template.yml'
     tags:
-      - vm
+      - build_discworld
   - project: 'ncmir/buildchain'
     ref: master
     file: 'cdeep3m/test.gitlab-ci-template.yml'
     tags:
-      - vm
+      - build_discworld
 
 github_mirror:
   stage: mirror
