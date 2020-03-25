@@ -3,6 +3,9 @@ Tracking changes of CDeep3M Version 2.x.x
 
 ## [Unreleased changes]
 
+### Added
+- Logo
+
 ## [2.1.1] - 2020-03-22
 ### Changed
 - Remove test for binary data in PreprocessPackage
