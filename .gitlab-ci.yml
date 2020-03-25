@@ -28,7 +28,7 @@ github_mirror:
     cd /tmp
     git clone --mirror ${CI_REPOSITORY_URL} project
     cd project
-    git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com:CRBS/sync_test.git
+    git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/CRBS/sync_test.git
     git push --mirror github
   tags:
   - vm
