@@ -10,7 +10,7 @@
 [previewFAQcdeep3m]: https://cdeep3m.crbs.ucsd.edu/home/faq
 [AWScdeep3m]: https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=cdeep3m-stack-py3-docker&templateURL=https://cf-templates-1i8oypshb6jhq-us-west-2.s3-us-west-2.amazonaws.com/cloud_formation_cdeep3m_py3-docker.json
 
-<img src="/media/cdeep3m_logo_1-01.png" style="float:right;">
+![cdeep3m](/media/cdeep3m_logo_1-01.png){: .align-right}
 
 # CDeep3M2 overview:
 
