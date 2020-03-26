@@ -30,6 +30,7 @@ github_mirror:
     git clone --mirror ${CI_REPOSITORY_URL} project
     cd project
     git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/CRBS/cdeep3m2.git
-    git push --mirror github
+    git checkout master
+    git push github +master:master
   tags:
   - build_discworld
