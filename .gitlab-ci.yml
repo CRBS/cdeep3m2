@@ -29,7 +29,7 @@ github_mirror:
     rm -rf /tmp/project
     git clone ${CI_REPOSITORY_URL} project
     cd project
-    git remote add -t github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/CRBS/cdeep3m2.git
+    git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/CRBS/cdeep3m2.git
     git checkout master
     git push github +master:master
   tags:
