@@ -12,7 +12,7 @@
 
 # CDeep3M2 overview:
 
-<img align="right" width="200" height="50" src="/media/cdeep3m_logo_1-01.png">
+<img align="right" width="100" height="50" src="/media/cdeep3m_logo_1-01.png">
 
  * provides a plug-and-play deep learning solution for large-scale image segmentation of light, electron and X-ray microscopy.
  * is distributed as cloud formation template for AWS cloud instances, as docker container and as singularity container for local installs or supercomputer clusters.
