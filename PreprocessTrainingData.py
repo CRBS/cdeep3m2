@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# PreprocessTraining
+# PreprocessTrainingData.py
 # Generates augmented hdf5 datafiles from raw and label images
 #
-# Syntax : PreprocessTraining.py /ImageData/training/images/ /ImageData/training/labels/ /Augmentation level/ /ImageData/augmentedtraining/
+# Syntax : PreprocessTrainingData.py /ImageData/training/images/ /ImageData/training/labels/ /Augmentation level/ /ImageData/augmentedtraining/
 #
 # Example usage: ./PreprocessTrainingData.py ./mito_testsample/training/images/ ./mito_testsample/training/labels/ -1 3 mito_testsample/training/augmented_data
 # 
@@ -97,7 +97,7 @@ def main():
         print('Verifying labels')
         checkpoint_isbinary(lblstack)
         if np.max(lblstack[:]) != 1:
-            lblstack = np.divide(lblstack, np.max(lblstack[:]))
+            lblstack = lblstack > 0
 
         # ----------------------------------------------------------------------------------------
         # apply denoising
@@ -106,7 +106,7 @@ def main():
         if strength == '-1':
             print('Running image enhancement')
             enhanced_path = os.path.join(outdir, 'enhanced_v' + str(j + 1))
-            run_enhancement = './enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' 2'
+            run_enhancement = 'enhance_stack.py ' + training_img_path + ' ' + enhanced_path + ' 2'
             os.system(run_enhancement)
             training_img_path = enhanced_path
 

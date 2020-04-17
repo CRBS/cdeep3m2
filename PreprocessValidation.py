@@ -1,4 +1,5 @@
-# PreprocessValidation
+#!/usr/bin/env python3
+# PreprocessValidation.py
 # Makes hdf5 validation file from raw images and corresponding labels
 #
 # Syntax : PreprocessValidation ~/validation/images/ ~/validation/labels/ ~/validation/combined
@@ -10,8 +11,6 @@
 #
 # Runtime: <1 min
 #
-
-
 # ----------------------------------------------------------------------------------------
 # Initialize
 # ----------------------------------------------------------------------------------------
@@ -28,28 +27,44 @@ print('Starting Validation data Preprocessing')
 
 arg_list = sys.argv[1:]
 
+second_aug = '-1'
 if len(arg_list) < 3:
-    print('Use -> python PreprocessValidation.py /validation/images/ /validation/labels/ /validdation/combined')
+    print('Use -> PreprocessValidation.py /validation/images/ /validation/labels/ /validation/combined')
+    print('Or without denoising: PreprocessValidation.py /validation/images/ /validation/labels/ 0 /validation/combined')
     sys.exit()
+if len(arg_list) > 3:
+    second_aug = arg_list[2]
 
 tic = time.time()
 
-trainig_img_path = arg_list[0]
-print('Validation Image Path:', trainig_img_path)
+valid_img_path = arg_list[0]
+print('Validation Image Path:', valid_img_path)
 label_img_path = arg_list[1]
 print('Validation Label Path:', label_img_path)
-outdir = arg_list[2]
+outdir = arg_list[-1]
 print('Output Path:', outdir)
+if not os.path.isdir(outdir):
+    os.mkdir(outdir)
+
+# ----------------------------------------------------------------------------------------
+# apply denoising
+# ----------------------------------------------------------------------------------------
+
+if second_aug == '-1':
+    print('Running image enhancement')
+    enhanced_path = os.path.join(outdir, 'enhanced')
+    run_enhancement = 'enhance_stack.py ' + valid_img_path + ' ' + enhanced_path + ' 2'
+    os.system(run_enhancement)
+    valid_img_path = enhanced_path
 
 # ----------------------------------------------------------------------------------------
 # Load images
 # ----------------------------------------------------------------------------------------
 
 print('Loading:')
-print(trainig_img_path)
-imgstack = imageimporter(trainig_img_path)
+print(valid_img_path)
+imgstack = imageimporter(valid_img_path)
 print('Verifying images')
-checkpoint_nobinary(imgstack)
 
 # ----------------------------------------------------------------------------------------
 # Load labels
@@ -60,6 +75,7 @@ print(label_img_path)
 lblstack = imageimporter(label_img_path)
 print('Verifying labels')
 checkpoint_isbinary(lblstack)
+lblstack = lblstack > 0
 
 # ----------------------------------------------------------------------------------------
 # Convert and save
@@ -70,9 +86,6 @@ lb = lblstack.astype('float32')
 
 d_details = '/data'
 l_details = '/label'
-
-if not os.path.isdir(outdir):
-    os.mkdir(outdir)
 
 ext = ".h5"
 

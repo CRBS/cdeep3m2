@@ -3,9 +3,15 @@ Tracking changes of CDeep3M Version 2.x.x
 
 ## [Unreleased changes]
 
+## [2.1.2] - 2020-04-18
+### Fixed
+- Binarization if labels above 1
+- Enhancements call for training data
+
 ### Added
 - Logo
 - LICENSE
+- Same enhancements for validation dataset
 
 ## [2.1.1] - 2020-03-22
 ### Changed
