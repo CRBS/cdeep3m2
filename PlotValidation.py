@@ -38,7 +38,7 @@ test_df = pd.read_csv(test_file, sep=',', header=0)
 test_df['NumIters'] = test_df['NumIters'].astype(int)
 test_df['loss_deconv_all'] = test_df['loss_deconv_all'].astype(float)
 
-# plots loss and saves as a pdf
+# plots loss and saves as a pdf and png
 plt.plot(train_df['NumIters'], train_df['loss_deconv_all'], label='Training Loss', linewidth=1)
 plt.plot(test_df['NumIters'], test_df['loss_deconv_all'], label='Validation Loss', linewidth=1)
 plt.xlabel('Number of Iterations')
@@ -48,15 +48,15 @@ plt.yscale('log')
 plt.grid(True)
 plt.legend()
 plt.savefig(os.path.join(logdir, "loss.pdf"), bbox_inches='tight')
-#plt.show()
+plt.savefig(os.path.join(logdir, "loss.png"), bbox_inches='tight')
 plt.close('all')
 
-# plots accuracy and saves as a pdf
+# plots accuracy and saves as a pdf and png
 plt.plot(test_df['NumIters'], test_df['accuracy_conv'], label='Validation Accuracy', linewidth=1)
 plt.xlabel('Number of Iterations')
 plt.ylabel('Loss')
 plt.title('Validation Accuracy')
 plt.grid(True)
 plt.savefig(os.path.join(logdir, "accuracy.pdf"), bbox_inches='tight')
-#plt.show()
+plt.savefig(os.path.join(logdir, "accuracy.png"), bbox_inches='tight')
 plt.close('all')
