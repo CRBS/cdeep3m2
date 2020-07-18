@@ -21,6 +21,7 @@ from multiprocessing import cpu_count
 from joblib import Parallel, delayed
 import cv2
 from read_files_in_folder import read_files_in_folder
+import configs.check_limits
 
 tic = time.time()
 
@@ -63,8 +64,10 @@ def processInput(x):
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     #skimage.io.imsave(file_out, overlayed)
     cv2.imwrite(file_out, overlayed)
-
-p_tasks = max(1, min(len(file_list_raw), int(cpu_count() / 2)))
+if cpu_limits['Create_overlays'] > 0:
+    p_tasks = min(len(file_list_raw), cpu_limits['Create_overlays'])
+else:
+    p_tasks = max(1, min(len(file_list_raw), int(cpu_count() / 2)))
 sys.stdout.write('Running ' + str(p_tasks) + ' parallel tasks\n')
 results = Parallel(n_jobs=p_tasks)(delayed(processInput)(i) for i in range(0, len(file_list_raw)))
 

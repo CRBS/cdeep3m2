@@ -19,6 +19,7 @@ import numpy as np
 #import skimage
 import cv2
 from read_files_in_folder import read_files_in_folder
+import configs.check_limits
 
 tic = time.time()
 
@@ -57,7 +58,12 @@ def ensembleImgs(z):
     #    skimage.io.imsave(save_filename, prob_map, as_grey=True)
     #except BaseException:
     #    skimage.io.imsave(save_filename, prob_map)
-p_tasks = max(1, int(cpu_count() - 2))
+
+
+if cpu_limits['EnsemblePredictions'] > 0:
+    p_tasks = cpu_limits['EnsemblePredictions']
+else:
+    p_tasks = max(1, int(cpu_count() - 2))
 Parallel(n_jobs=p_tasks)(delayed(ensembleImgs)(z)
                              for z in range(0, total_zplanes))
 

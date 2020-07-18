@@ -23,6 +23,7 @@ from joblib import Parallel, delayed
 import cv2
 import prox_tv as ptv
 from read_files_in_folder import read_files_in_folder
+import configs.check_limits
 
 sys.stdout.write('Runnning image enhancements\n')
 #print(sys.argv)
@@ -35,9 +36,15 @@ os.mkdir(outputfolder)
 file_list = read_files_in_folder(inputfolder)[0]
 sys.stdout.write('Processing ' + str(len(file_list)) + ' images \n')
 sys.stdout.write('Removing ' + str(cutperc) + ' percentile of grey values \n')
-
-p_tasks = max(1, min(len(file_list), int(cpu_count()/2)))
-num_threads = int(round((cpu_count() / p_tasks), ndigits = None))
+cpu_limits = configs.check_limits.cpus()
+if cpu_limits['enhance_stack'] > 0:
+    p_tasks = min(len(file_list), cpu_limits['enhance_stack'])
+else:
+    p_tasks = max(1, min(len(file_list), int(cpu_count()/2)))
+if cpu_limits['enhance_stack_threadlimit'] > 0:
+    num_threads = cpu_limits['enhance_stack_threadlimit']
+else:
+    num_threads = int(round((cpu_count() / p_tasks), ndigits = None))
 def processInput(x):
     file_in = os.path.join(inputfolder, file_list[x])
     sys.stdout.write('Loading: ' + str(file_in) + ' -> ')
