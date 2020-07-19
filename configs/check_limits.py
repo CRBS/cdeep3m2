@@ -17,4 +17,7 @@ def cpus():
     if os.path.isfile('./configs/cpu_resources.txt'):
         with open('./configs/cpu_resources.txt') as json_file:
             cpu_limits = json.load(json_file)
+    if os.path.isfile('/home/cdeep3m/configs/cpu_resources.txt'):
+        with open('/home/cdeep3m/configs/cpu_resources.txt') as json_file:
+            cpu_limits = json.load(json_file)
     return cpu_limits
