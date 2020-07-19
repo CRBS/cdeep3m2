@@ -3,6 +3,11 @@ Tracking changes of CDeep3M Version 2.x.x
 
 ## [Unreleased changes]
 
+## [2.1.4] - 2020-07-19
+### Fixed
+ - bugs reading CPU limits of EnsemblePredictions and Create_overlays
+ - bug reading CPU limits Colab
+
 ## [2.1.3] - 2020-07-18
 ### Added
  - Can set CPU limitations in configs/cpu_resources.txt

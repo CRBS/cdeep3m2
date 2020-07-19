@@ -59,7 +59,7 @@ def ensembleImgs(z):
     #except BaseException:
     #    skimage.io.imsave(save_filename, prob_map)
 
-
+cpu_limits = configs.check_limits.cpus()
 if cpu_limits['EnsemblePredictions'] > 0:
     p_tasks = cpu_limits['EnsemblePredictions']
 else:

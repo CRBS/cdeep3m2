@@ -64,6 +64,7 @@ def processInput(x):
     sys.stdout.write('Saving: ' + str(file_out) + '\n')
     #skimage.io.imsave(file_out, overlayed)
     cv2.imwrite(file_out, overlayed)
+cpu_limits = configs.check_limits.cpus()
 if cpu_limits['Create_overlays'] > 0:
     p_tasks = min(len(file_list_raw), cpu_limits['Create_overlays'])
 else:
