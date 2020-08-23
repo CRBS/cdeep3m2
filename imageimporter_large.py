@@ -29,16 +29,23 @@ def imageimporter_large(img_path, area, z_stack, outfolder):
             imgstack = imgstack[area[0]:area[1],
                                 area[2]:area[3], z_stack[0]:z_stack[1]]
             print('Processed size:', imgstack.shape)
-        elif '.tif' in ext:
-            im = pilimage.open(img_path)
-            image_array = np.array(im)
-            imgstack = image_array[area[0]:area[1],
-                                   area[2]:area[3], z_stack[0]:z_stack[1]]
+        elif ext.lower() in ['.tif', '.tiff']:
+            retflag, im = cv2.imreadmulti(img_path, flags=cv2.IMREAD_UNCHANGED)
+            if retflag is True:
+                imarray = np.array(im)
+                # imarray = np.expand_dims(imarray, axis=len(imarray.shape))
+                imgstack = imarray[z_stack[0]:z_stack[1], area[0]:area[1],
+                                   area[2]:area[3]]
+                imagesize = imgstack.shape
+                print('Successfully read image stack with', str(
+                    imagesize[0]), 'images\n')
+            else:
+                raise Exception("Something went wrong while loading the multi-page TIF file")
 
     elif os.path.isdir(img_path):
         file_list = read_files_in_folder(img_path)[0]
-        png_list = [f for f in file_list if f.endswith('.png')]
-        tif_list = [f for f in file_list if f.endswith('.tif')]
+        png_list = [f for f in file_list if f.lower().endswith('.png')]
+        tif_list = [f for f in file_list if f.lower().endswith(('.tif', '.tiff'))]
         tif_list_len = len(tif_list)
         png_list_len = len(png_list)
 

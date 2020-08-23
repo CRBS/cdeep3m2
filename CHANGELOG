@@ -2,6 +2,13 @@
 Tracking changes of CDeep3M Version 2.x.x
 
 ## [Unreleased changes]
+## [2.1.5] - 2020-08-19
+### Fixed
+ - bugs related to reading multi-page TIF stacks
+
+### Added
+ - handling file extension variations
+ - enhancement support for TIF stacks
 
 ## [2.1.4] - 2020-07-19
 ### Fixed
