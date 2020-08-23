@@ -25,18 +25,19 @@ M Haberl -- CDeep3M -- NCMIR/NBCR, UCSD -- Date: 01/2019
             h5file = h5py.File(img_path, 'r')
             imgstack = [np.stack((h5file[key].value,), axis=-1)
                         for key in h5file.keys()]
-        elif '.tif' in ext:
-            dataset = pilimage.open(img_path)
-            print(
-                'Reading image stack with', str(
-                    dataset.n_frames), 'images\n')
-            for i in range(dataset.n_frames):
-                dataset.seek(i)
-                imgstack.append(np.stack((np.array(dataset),), axis=-1))
-            pilimage.close()
+        elif ext.lower() in ['.tif', '.tiff']:
+            retflag, im = cv2.imreadmulti(img_path, flags=cv2.IMREAD_UNCHANGED)
+            if retflag is True:
+                imarray = np.array(im)
+                imgstack = np.expand_dims(imarray, axis=len(imarray.shape))
+                imagesize = imgstack.shape
+                print('Successfully read image stack with', str(
+                    imagesize[0]), 'images\n')
+            else:
+                raise Exception("Something went wrong while loading the multi-page TIF file")
     elif os.path.isdir(img_path):
-        png_list = [f for f in os.listdir(img_path) if f.endswith('.png')]
-        tif_list = [f for f in os.listdir(img_path) if f.endswith('.tif')]
+        png_list = [f for f in os.listdir(img_path) if f.lower().endswith('.png')]
+        tif_list = [f for f in os.listdir(img_path) if f.lower().endswith(('.tif', '.tiff'))]
         tif_list_len = len(tif_list)
         png_list_len = len(png_list)
 

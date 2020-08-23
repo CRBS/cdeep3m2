@@ -28,12 +28,14 @@ def check_image_size(img_path):
             imagesize = data[keys[0]].shape
             return imagesize
 
-        elif file_extension == '.tif':
-            im = Image.open(img_path)
-            imarray = np.array(im)
-            imagesize = imarray.shape
-            im.close()
-            return imagesize
+        elif file_extension.lower() in ['.tif', '.tiff']:
+            retflag, im = cv2.imreadmulti(img_path, flags=cv2.IMREAD_UNCHANGED)
+            if retflag is True:
+                imarray = np.array(im)
+                imagesize = im.shape
+                return (imagesize[1], imagesize[2], imagesize[0])
+            else:
+                raise Exception("Something went wrong while loading the multipage TIF file")
         '''
         elif file_extension == '.png':
             im = Image.open(img_path)
@@ -43,8 +45,8 @@ def check_image_size(img_path):
         '''
     elif os.path.isdir(img_path) == 1:
         file_list = read_files_in_folder(img_path)[0]
-        png_list = [f for f in file_list if f.endswith('.png')]
-        tif_list = [f for f in file_list if f.endswith('.tif')]
+        png_list = [f for f in file_list if f.lower().endswith('.png')]
+        tif_list = [f for f in file_list if f.lower().endswith(('.tif', '.tiff'))]
         if len(tif_list) + len(png_list) == 0:
             print('No Tifs or PNGs found in the directory')
             return
