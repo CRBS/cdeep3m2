@@ -34,3 +34,8 @@ github_mirror:
     git push github +master:master
   tags:
   - build_discworld
+  #only mirror commits to master
+  only:
+    refs:
+      - master
+
