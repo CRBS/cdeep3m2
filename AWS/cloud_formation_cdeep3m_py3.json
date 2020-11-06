@@ -1,0 +1,301 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Deep3m template. Creates an EC2 ubuntu instance off of a base Amazon Deep Learning AMI and installs Cdeep3m Python3 version as well as IMOD. This template provides ssh access to the machine created. **WARNING** This template creates an Amazon EC2 instance. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters": {
+        "KeyName": {
+            "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
+        },
+        "DatasetURL": {
+            "Description": "Web link that will be automatically downloaded by EC2 instance",
+            "Type": "String",
+            "Default": "",
+            "AllowedPattern": "( *(\\b(https?|ftp)://)[-A-Za-z0-9+&@#/%?=~_|!:,.;]+)|( *)",
+            "ConstraintDescription": "must be empty or set to a HTTP URL to a file for download"
+        },
+        "GPUInstanceType": {
+            "Description": "GPU EC2 instance type",
+            "Type": "String",
+            "Default": "p3.2xlarge",
+            "AllowedValues": [
+                "p2.xlarge",
+                "p3.2xlarge",
+                "p3.8xlarge",
+                "p3.16xlarge"
+            ],
+            "ConstraintDescription": "must be a valid EC2 GPU instance type."
+        },
+        "GPUDiskSize": {
+            "Description": "Size of GPU EC2 instance disk in gigabytes",
+            "Type": "Number",
+            "Default": "100",
+            "MinValue": "50",
+            "ConstraintDescription": "must be a whole number 50 or larger"
+        },
+        "SSHLocation": {
+            "Description": "The IP address range that can be used to SSH to the EC2 instances",
+            "Type": "String",
+            "MinLength": "9",
+            "MaxLength": "18",
+            "Default": "0.0.0.0/0",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+            "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+        }
+	
+    },
+    "Mappings" : {
+       "RegionMap" : {
+           "ap-south-1"    : { "AMI" : "ami-6a024a05"},
+           "eu-west-1"    : { "AMI" : "ami-2e269e57"},
+           "ap-northeast-2"    : { "AMI" : "ami-3097315e"},
+           "ap-northeast-1"    : { "AMI" : "ami-fff07199"},
+           "ap-southeast-1"    : { "AMI" : "ami-0746217b"},
+           "ap-southeast-2"    : { "AMI" : "ami-fbfe0999"},
+           "eu-central-1"    : { "AMI" : "ami-540f863b"},
+           "us-east-1"    : { "AMI" : "ami-c4701dbe"},
+           "us-east-2"    : { "AMI" : "ami-67dbf202"},
+           "us-west-2"    : { "AMI" : "ami-bcce6ac4"}
+       }       
+    },
+    "Resources": {
+        "GPUInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "InstanceType": {
+                    "Ref": "GPUInstanceType"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "InstanceSecurityGroup"
+                    }
+                ],
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "ImageId": {
+                    "Fn::FindInMap": [ "RegionMap",
+                        { "Ref": "AWS::Region" }, "AMI" ]
+                    
+                },
+                "BlockDeviceMappings" : [
+                    {
+                      "DeviceName" : "/dev/sda1",
+                      "Ebs" : { 
+                                 "VolumeSize" : { "Ref": "GPUDiskSize" },
+                                 "VolumeType" : "gp2"
+                              }
+                    }
+                ],
+                "Tags" : [ 
+                    {
+                      "Key" : "Name", "Value" : { "Ref": "AWS::StackName" } 
+                    }
+                ],
+                "UserData"    : { "Fn::Base64" : { "Fn::Join" : [ "", [
+                     "#!/bin/bash\n\n",
+                     "echo 'Installing octave' `date` ' ::::'`date +%s`\n",
+                     "apt-get update\n",
+                     "ecode=100\n",
+                     "while [ $ecode -ne 0 ]\n",
+                     "do\n",
+                     "  apt-get -y install octave octave-image octave-pkg-dev git python-pip unzip parallel python-opencv python-mpi4py libtiff-dev libjpeg62\n",
+                     "  ecode=$?\n",
+                     "  echo 'Sleeping 1 second'\n",
+                     "  sleep 1\n",
+                     "done\n\n",
+                     "echo 'Installing pip packages' `date` ' ::::'`date +%s`\n",
+                     "pip install joblib\n",
+                     "pip install requests\n",
+                     "pushd /tmp\n",
+                     "wget --timeout=5 http://hits.dwyl.io/CRBS/cdeep3m-wf.svg\n",
+                     "popd\n",
+                     "pip install -U https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                     "sudo -u ubuntu echo 'export PATH=$PATH:/home/ubuntu/cdeep3m_py3:/home/ubuntu/caffe_nd_sense_segmentation/build/tools' >> /home/ubuntu/.bashrc\n",
+                     "sudo -u ubuntu echo 'export CAFFE_PATH=/home/ubuntu/caffe_nd_sense_segmentation' >> /home/ubuntu/.bashrc\n",
+                     "cd /home/ubuntu\n",
+                     "echo 'Installing caffe' `date` ' ::::'`date +%s`\n",
+                     "sudo -u ubuntu git clone https://github.com/coleslaw481/caffe_nd_sense_segmentation.git\n",
+                     "cd /home/ubuntu/caffe_nd_sense_segmentation\n",
+                     "sudo -u ubuntu cp Makefile.config.example Makefile.config\n",
+                     "sudo -u ubuntu sed -i 's/ \\/usr\\/local\\/include/\\/usr\\/local\\/include \\/usr\\/include\\/hdf5\\/serial\\//g' Makefile.config\n",
+                     "sudo -u ubuntu sed -i 's/^# OPENCV_VERSION := 3/OPENCV_VERSION := 3/g' Makefile.config\n",
+                     "sudo -u ubuntu sed -i 's/hdf5/hdf5_serial/g' Makefile\n",
+                     "sudo -u ubuntu make -j `parallel --no-notice --number-of-cores` all\n",
+                     "cd ..\n",
+                     "echo 'Installing hdf5oct' `date` ' ::::'`date +%s`\n",
+                     "sudo -u ubuntu wget https://github.com/stegro/hdf5oct/archive/b047e6e611e874b02740e7465f5d139e74f9765f.zip\n",
+                     "sudo -u ubuntu unzip b047e6e611e874b02740e7465f5d139e74f9765f.zip\n",
+                     "/bin/rm b047e6e611e874b02740e7465f5d139e74f9765f.zip\n",
+                     "cd hdf5oct-*\n",
+                     "sudo -u ubuntu make\n",
+                     "make install\n",
+                     "cd /home/ubuntu\n",
+                     "/bin/rm -rf /home/ubuntu/hdf5oct*\n",
+                     "echo 'Installing cdeep3m-py3' `date` ' ::::'`date +%s`\n",
+                     "cd /home/ubuntu\n",
+					 "git clone https://aws-template:epWb9LY9zcTTj5LXzsVz@giterdone.crbs.ucsd.edu/ncmir/cdeep3m_py3.git\n",
+                     "sudo -u ubuntu chmod +x /home/ubuntu/cdeep3m_py3/*.py\n",
+					 "sudo -u ubuntu chmod +x /home/ubuntu/cdeep3m_py3/*.sh\n",
+					 "sudo -u ubuntu pip3 install -r /global/cdeep3m_py3/requirements/py3_cdeep3m_reqs.txt\n",
+					 "ldconfig\n",
+					 "echo 'Installing bats' `date` ' ::::'`date +%s`\n",
+                     "sudo -u ubuntu wget https://github.com/bats-core/bats-core/archive/v0.4.0.tar.gz\n",
+                     "sudo -u ubuntu tar -zxf v0.4.0.tar.gz\n",
+                     "sudo -u ubuntu /bin/rm v0.4.0.tar.gz\n",
+                     "cd bats-core-0.4.0\n",
+                     "./install.sh /usr/local\n",
+                     "cd /home/ubuntu\n",
+                     "/bin/rm -rf /home/ubuntu/bats-core-0.4.0\n",
+                     "echo 'Downloading trained models and imod' `date` ' ::::'`date +%s`\n",
+                     "export mito_data='https://s3-us-west-2.amazonaws.com/cdeep3m-trainedmodels-s3/sbem/mitochrondria/xy5.9nm40nmz/sbem_mitochrondria_xy5.9nm40nmz.tar.gz'\n",
+                     "export mito_model='https://s3-us-west-2.amazonaws.com/cdeep3m-trainedmodels-s3/sbem/mitochrondria/xy5.9nm40nmz/sbem_mitochrondria_xy5.9nm40nmz_30000iter_trainedmodel.tar.gz'\n",
+                     "imodfile='imod_4.9.12_RHEL6-64_CUDA6.0.sh'\n",
+                     "export imodurl=\"http://bio3d.colorado.edu/imod/AMD64-RHEL5/$imodfile\"\n",
+                     "sudo -u ubuntu echo -e \"$mito_model\\n$mito_data\\n$imodurl\" | parallel --no-notice -N 1 -j 3 wget {1}\n",
+                     "sudo -u ubuntu tar -zxf sbem_mitochrondria_xy5.9nm40nmz.tar.gz\n",
+                     "/bin/rm sbem_mitochrondria_xy5.9nm40nmz.tar.gz\n",
+                     "sudo -u ubuntu tar -zxf sbem_mitochrondria_xy5.9nm40nmz_30000iter_trainedmodel.tar.gz\n",
+                     "/bin/rm sbem_mitochrondria_xy5.9nm40nmz_30000iter_trainedmodel.tar.gz\n",
+                     "echo 'Installing IMOD' `date` ' ::::'`date +%s`\n",
+                     "echo 'Imod installation downloading $imodfile'\n",
+                     "chmod a+x $imodfile\n",
+                     "./$imodfile -yes\n",
+                     "rm -f $imodfile\n",
+                     "echo 'Signaling completion' `date` ' ::::'`date +%s`\n",
+                     "/usr/local/bin/cfn-signal --exit-code 0 -i gpu1 '", { "Ref" : "WaitHandle" }, "'\n",
+                     "if [ $? != 0 ] ; then\n",
+                     "  sleep 10;/usr/local/bin/cfn-signal --exit-code 0 -i gpu1 '", { "Ref" : "WaitHandle" }, "'\n",
+                     "fi\n",
+                     "export DATASETURL=",
+                     { "Ref" : "DatasetURL" },
+                     "\n",
+                     "if [ -n \"$DATASETURL\" ] ; then\n",
+                     "  cd /home/ubuntu\n",
+                     "  echo -e '#!/bin/bash\nmkdir -p /home/ubuntu/.datasetdownload\n' > /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e 'dataset='",
+                     { "Ref" : "DatasetURL" },
+                     " >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e '\npushd /home/ubuntu/.datasetdownload\nwget --timeout=30 \"$dataset\"\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e 'if [ $? == 0 ] ; then\n  mv * /home/ubuntu/.\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e '  sudo wall \"Download of $dataset complete\"\nelse\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e ' sudo wall \"Download of $dataset failed\"\nfi\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  chmod a+x /home/ubuntu/datasetdownload.sh\n",
+                     "  chown ubuntu.ubuntu /home/ubuntu/datasetdownload.sh\n",
+                     "  sudo -u ubuntu screen -S downloader -d -m nice -n 19 /home/ubuntu/datasetdownload.sh\n",
+                     "  export DATASETFILE=`echo \"$DATASETURL\" | sed 's/.*\\///'`\n",
+                     "  echo 'NOTE: Downloading '$DATASETFILE' file in background to ~/.datasetdownload, file will appear in /home/ubuntu when done' >> /etc/motd\n",
+                     "  echo '      Advanced users can see progress via this screen resume command: screen -r downloader' >> /etc/motd\n",
+                     "  echo '      (To exit the screen type Ctrl-a d) If no screen is available, download has completed or failed' >> /etc/motd\n",
+                     "fi\n",
+                     "echo 'Done with update' `date` ' ::::'`date +%s`\n"
+                       ]]}}
+            }, 
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "4ad8b7df-e9a7-4256-9ab2-9f548d4bb695"
+                }
+            }
+        },
+        "InstanceSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable SSH access via port 22",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Ref": "SSHLocation"
+                        }
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "85d8cb29-8b24-41c8-bca9-498f219d2b6e"
+                }
+            }
+        },
+        "WaitHandle" : {
+            "Type" : "AWS::CloudFormation::WaitConditionHandle",
+            "Properties" : {
+            }
+        },
+        "WaitCondition" : {
+            "Type" : "AWS::CloudFormation::WaitCondition",
+            "DependsOn" : "GPUInstance",
+            "Properties" : {
+                "Handle" : { "Ref" : "WaitHandle" },
+                "Timeout" : "4500"
+            }
+        }
+    },
+    "Outputs": {
+        "InstanceId": {
+            "Description": "InstanceId of the newly created EC2 instance",
+            "Value": {
+                "Ref": "GPUInstance"
+            }
+        },
+        "AZ": {
+            "Description": "Availability Zone of the newly created EC2 instance",
+            "Value": {
+                "Fn::GetAtt": [
+                    "GPUInstance",
+                    "AvailabilityZone"
+                ]
+            }
+        },
+        "PublicDNS": {
+            "Description": "Public DNSName of the newly created EC2 instance",
+            "Value": {
+                "Fn::GetAtt": [
+                    "GPUInstance",
+                    "PublicDnsName"
+                ]
+            }
+        },
+        "PublicIP": {
+            "Description": "Public IP address of the newly created EC2 instance",
+            "Value": {
+                "Fn::GetAtt": [
+                    "GPUInstance",
+                    "PublicIp"
+                ]
+            }
+        }
+    },
+    "Metadata": {
+        "AWS::CloudFormation::Designer": {
+            "85d8cb29-8b24-41c8-bca9-498f219d2b6e": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 60,
+                    "y": 90
+                },
+                "z": 1,
+                "embeds": []
+            },
+            "4ad8b7df-e9a7-4256-9ab2-9f548d4bb695": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 180,
+                    "y": 90
+                },
+                "z": 1,
+                "embeds": [],
+                "isassociatedwith": [
+                    "85d8cb29-8b24-41c8-bca9-498f219d2b6e"
+                ]
+            }
+        }
+    }
+}
