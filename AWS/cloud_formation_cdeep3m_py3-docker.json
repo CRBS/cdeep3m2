@@ -1,0 +1,223 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Deep3m template. Uses the NVIDIA Deep Learning AMI to run the cdeep3m docker container **WARNING** This template creates an Amazon EC2 instance. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters": {
+        "KeyName": {
+            "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
+        },
+        "DatasetURL": {
+            "Description": "Web link that will be automatically downloaded by EC2 instance",
+            "Type": "String",
+            "Default": "",
+            "AllowedPattern": "( *(\\b(https?|ftp)://)[-A-Za-z0-9+&@#/%?=~_|!:,.;]+)|( *)",
+            "ConstraintDescription": "must be empty or set to a HTTP URL to a file for download"
+        },
+        "GPUInstanceType": {
+            "Description": "GPU EC2 instance type",
+            "Type": "String",
+            "Default": "g4dn.xlarge",
+            "AllowedValues": [
+                "p3.2xlarge",
+                "p3.8xlarge",
+                "p3.16xlarge",
+				"p3dn.24xlarge",
+				"g4dn.xlarge",
+				"g4dn.2xlarge",
+				"g4dn.4xlarge",
+				"g4dn.8xlarge",
+				"g4dn.12xlarge",
+				"g4dn.16xlarge"
+            ],
+            "ConstraintDescription": "must be a valid EC2 GPU instance type."
+        },
+        "GPUDiskSize": {
+            "Description": "Size of GPU EC2 instance disk in gigabytes",
+            "Type": "Number",
+            "Default": "100",
+            "MinValue": "50",
+            "ConstraintDescription": "must be a whole number 50 or larger"
+        },
+        "SSHLocation": {
+            "Description": "The IP address range that can be used to SSH to the EC2 instances",
+            "Type": "String",
+            "MinLength": "9",
+            "MaxLength": "18",
+            "Default": "0.0.0.0/0",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+            "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+        }
+	
+    },
+    "Mappings" : {
+       "RegionMap" : {
+           "eu-west-1" : {"AMI" : "ami-04cd74d58be218987"},
+           "ap-northeast-2" : {"AMI" : "ami-09e00e986b8214201"},
+           "ap-northeast-1" : {"AMI" : "ami-0f6a3208f3feec65a"},
+           "us-east-1" : {"AMI" : "ami-07c95cafbb788face"},
+           "us-east-2" : {"AMI" : "ami-04e6cde49c31596d5"},
+           "us-west-2" : {"AMI" : "ami-06908b4e4109c2c56"}
+       }       
+    },
+    "Resources": {
+        "GPUInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "InstanceType": {
+                    "Ref": "GPUInstanceType"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "InstanceSecurityGroup"
+                    }
+                ],
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "ImageId": {
+                    "Fn::FindInMap": [ "RegionMap",
+                        { "Ref": "AWS::Region" }, "AMI" ]
+                    
+                },
+                "BlockDeviceMappings" : [
+                    {
+                      "DeviceName" : "/dev/sda1",
+                      "Ebs" : { 
+                                 "VolumeSize" : { "Ref": "GPUDiskSize" },
+                                 "VolumeType" : "gp2"
+                              }
+                    }
+                ],
+                "Tags" : [ 
+                    {
+                      "Key" : "Name", "Value" : { "Ref": "AWS::StackName" } 
+                    }
+                ],
+                "UserData"    : { "Fn::Base64" : { "Fn::Join" : [ "", [
+                     "#!/bin/bash\n\n",
+					 "echo -e 'echo To get the latest cdeep3m docker and connect to the instance run:' >> /home/ubuntu/.bashrc\n",
+					 "echo -e 'echo docker run -it --network=host  --gpus all --entrypoint /bin/bash ncmir/cdeep3m' >> /home/ubuntu/.bashrc\n",
+					 "rm -f /etc/skel/README.txt\n",
+					 "rm -f /etc/skel/mnist_example.sh\n",
+					 "rm -f /home/ubuntu/*.*\n",
+					 "rm -f /etc/update-motd.d/99-nvidia-motd\n",
+                     "export DATASETURL=",
+                     { "Ref" : "DatasetURL" },
+                     "\n",
+                     "if [ -n \"$DATASETURL\" ] ; then\n",
+                     "  cd /home/ubuntu\n",
+                     "  echo -e '#!/bin/bash\nmkdir -p /home/ubuntu/.datasetdownload\n' > /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e 'dataset='",
+                     { "Ref" : "DatasetURL" },
+                     " >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e '\npushd /home/ubuntu/.datasetdownload\nwget --timeout=30 \"$dataset\"\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e 'if [ $? == 0 ] ; then\n  mv * /home/ubuntu/.\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e '  sudo wall \"Download of $dataset complete\"\nelse\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  echo -e ' sudo wall \"Download of $dataset failed\"\nfi\n' >> /home/ubuntu/datasetdownload.sh\n",
+                     "  chmod a+x /home/ubuntu/datasetdownload.sh\n",
+                     "  chown ubuntu.ubuntu /home/ubuntu/datasetdownload.sh\n",
+                     "  sudo -u ubuntu screen -S downloader -d -m nice -n 19 /home/ubuntu/datasetdownload.sh\n",
+                     "  export DATASETFILE=`echo \"$DATASETURL\" | sed 's/.*\\///'`\n",
+                     "  echo 'NOTE: Downloading '$DATASETFILE' file in background to ~/.datasetdownload, file will appear in /home/ubuntu when done' >> /etc/motd\n",
+                     "  echo '      Advanced users can see progress via this screen resume command: screen -r downloader' >> /etc/motd\n",
+                     "  echo '      (To exit the screen type Ctrl-a d) If no screen is available, download has completed or failed' >> /etc/motd\n",
+                     "fi\n",
+                     "echo 'Done with update' `date` ' ::::'`date +%s`\n"
+                       ]]}}
+            }, 
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "4ad8b7df-e9a7-4256-9ab2-9f548d4bb695"
+                }
+            }
+        },
+        "InstanceSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable SSH access via port 22",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": {
+                            "Ref": "SSHLocation"
+                        }
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "85d8cb29-8b24-41c8-bca9-498f219d2b6e"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "InstanceId": {
+            "Description": "InstanceId of the newly created EC2 instance",
+            "Value": {
+                "Ref": "GPUInstance"
+            }
+        },
+        "AZ": {
+            "Description": "Availability Zone of the newly created EC2 instance",
+            "Value": {
+                "Fn::GetAtt": [
+                    "GPUInstance",
+                    "AvailabilityZone"
+                ]
+            }
+        },
+        "PublicDNS": {
+            "Description": "Public DNSName of the newly created EC2 instance",
+            "Value": {
+                "Fn::GetAtt": [
+                    "GPUInstance",
+                    "PublicDnsName"
+                ]
+            }
+        },
+        "PublicIP": {
+            "Description": "Public IP address of the newly created EC2 instance",
+            "Value": {
+                "Fn::GetAtt": [
+                    "GPUInstance",
+                    "PublicIp"
+                ]
+            }
+        }
+    },
+    "Metadata": {
+        "AWS::CloudFormation::Designer": {
+            "85d8cb29-8b24-41c8-bca9-498f219d2b6e": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 60,
+                    "y": 90
+                },
+                "z": 1,
+                "embeds": []
+            },
+            "4ad8b7df-e9a7-4256-9ab2-9f548d4bb695": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 180,
+                    "y": 90
+                },
+                "z": 1,
+                "embeds": [],
+                "isassociatedwith": [
+                    "85d8cb29-8b24-41c8-bca9-498f219d2b6e"
+                ]
+            }
+        }
+    }
+}
