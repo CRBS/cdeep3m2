@@ -156,7 +156,7 @@ if [ -n "$retrain" ] ; then
     echo "$res"   
 fi
 
-"${script_dir}"/trainworker.sh "${one_fmonly}"--numiterations $numiterations --gpu "$gpu" --base_learn "$base_lr" --power "$power" --momentum "$momentum" --weight_decay "$weight_decay" --average_loss "$average_loss" --lr_policy "$lr_policy" --iter_size "$iter_size" --snapshot_interval "$snapshot_interval" "$train_out"
+"${script_dir}"/trainworker.sh "${one_fmonly}" --numiterations $numiterations --gpu "$gpu" --base_learn "$base_lr" --power "$power" --momentum "$momentum" --weight_decay "$weight_decay" --average_loss "$average_loss" --lr_policy "$lr_policy" --iter_size "$iter_size" --snapshot_interval "$snapshot_interval" "$train_out"
 ecode=$?
 if [ $ecode != 0 ] ; then
     echo "ERROR, a non-zero exit code ($ecode) was received from: trainworker.sh --numiterations $numiterations"
