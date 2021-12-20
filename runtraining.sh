@@ -14,7 +14,7 @@ source "${script_dir}/commonfunctions.sh"
 
 numiterations="30000"
 gpu="all"
-one_fmonly=""
+one_fmonly="--models 1fm,3fm,5fm "
 base_lr="1e-02"
 power="0.8"
 momentum="0.9"
